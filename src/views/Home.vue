@@ -8,13 +8,14 @@
         <ComponentList />
       </section>
       <section class="center">
-        <div class="content" 
-        @drop="handleDrop" 
-        @dragover="handleDragOver"
-        @mousedown="handleMouseDown" 
-        @mouseup="deselectCurComponent">
-
-        </div>
+        <div
+          class="content"
+          @drop="handleDrop"
+          @dragover="handleDragOver"
+          @mousedown="handleMouseDown"
+          @mouseup="deselectCurComponent"
+        >
+        <Editor/></div>
       </section>
       <section class="right">right</section>
     </main>
@@ -22,35 +23,54 @@
 </template>
 
 <script>
+import { useStore } from 'vuex'
+import componentListData from "@/custom-component/componentList";
 import Toolbar from "comps/Toolbar.vue";
 import ComponentList from "comps/ComponentList.vue";
+import Editor from 'comps/editor/index.vue'
+import { deepCopy } from "utils/utils";
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: "home",
   components: {
     Toolbar,
     ComponentList,
+    Editor
   },
   setup() {
-    const handleDrop = ()=>{
-      console.log('handleDrop');
+    const store = useStore();
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const component = deepCopy(
+        componentListData[e.dataTransfer.getData("index")]
+      );
+      component.style.left = e.offsetX;
+      component.style.top = e.offsetY;
+      component.id = uuidv4();
+      store.commit('addComponent', { component })
+      console.log(component);
+      console.log(store);
     };
-    const handleDragOver = ()=>{
-      console.log('handleDragOver');
+    const handleDragOver = (e) => {
+      e.preventDefault();
+      console.log("handleDragOver");
     };
-    const handleMouseDown = ()=>{
-      console.log('handleMouseDown');
+    const handleMouseDown = () => {
+      console.log("handleMouseDown");
     };
-    const deselectCurComponent = ()=>{
-      console.log('deselectCurComponent');
+    const deselectCurComponent = () => {
+      console.log("deselectCurComponent");
     };
     return {
       handleDrop,
       handleDragOver,
       handleMouseDown,
       deselectCurComponent,
-    }
-  }
+    };
+  },
 };
 </script>
 

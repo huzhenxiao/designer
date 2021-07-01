@@ -2,6 +2,8 @@
 export const commonStyle = {
   rotate: 0, 
   opacity: 1,
+  left:0,
+  top:0,
 }
 
 export const commonAttr = {
@@ -50,7 +52,7 @@ const list = [
       },
   },
   {
-      component: 'Picture', 
+      component: 'picture', 
       label: '图片', 
       icon: 'el-icon-picture',
       propValue: import('assets/logo.png'),
