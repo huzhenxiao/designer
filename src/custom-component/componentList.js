@@ -1,3 +1,4 @@
+import logo from 'assets/logo.png'
 // 公共样式
 export const commonStyle = {
   rotate: 0, 
@@ -55,7 +56,7 @@ const list = [
       component: 'picture', 
       label: '图片', 
       icon: 'el-icon-picture',
-      propValue: import('assets/logo.png'),
+      propValue: logo,
       style: {
           width: 300,
           height: 200,

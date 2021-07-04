@@ -3,12 +3,12 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "styles/index.scss";
-import { ElButton, ElIcon, ElMessage, ElLoading } from "element-plus";
+import { ElButton, ElIcon, ElMessage, } from "element-plus";
 
 const app = createApp(App);
 
 const components = [ElButton, ElIcon];
-const plugins = [ElLoading, ElMessage];
+const plugins = [ ElMessage];
 components.forEach((component) => {
   app.use(component);
 });
@@ -20,6 +20,8 @@ plugins.forEach((plugin) => {
 const customComponentsMap = {
   "v-text": "VText",
   "v-button": "VButton",
+  "picture":'Picture',
+  "rect-shape" :'RectShape'
 };
 Object.keys(customComponentsMap).forEach((key) => {
   app.component(

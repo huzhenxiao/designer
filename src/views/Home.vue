@@ -15,31 +15,34 @@
           @mousedown="handleMouseDown"
           @mouseup="deselectCurComponent"
         >
-        <Editor/></div>
+          <Editor />
+        </div>
       </section>
-      <section class="right">right</section>
+      <!-- <section class="right">right</section> -->
     </main>
   </div>
 </template>
 
 <script>
-import { useStore } from 'vuex'
+import { useStore } from "vuex";
 import componentListData from "@/custom-component/componentList";
 import Toolbar from "comps/Toolbar.vue";
 import ComponentList from "comps/ComponentList.vue";
-import Editor from 'comps/editor/index.vue'
+import Editor from "comps/editor/Index.vue";
 import { deepCopy } from "utils/utils";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { computed } from "vue";
 
 export default {
   name: "home",
   components: {
     Toolbar,
     ComponentList,
-    Editor
+    Editor,
   },
   setup() {
     const store = useStore();
+    const isClickComponent = computed(() => store.state.isClickComponent);
 
     const handleDrop = (e) => {
       e.preventDefault();
@@ -50,7 +53,7 @@ export default {
       component.style.left = e.offsetX;
       component.style.top = e.offsetY;
       component.id = uuidv4();
-      store.commit('addComponent', { component })
+      store.commit("addComponent", { component });
       console.log(component);
       console.log(store);
     };
@@ -59,9 +62,13 @@ export default {
       console.log("handleDragOver");
     };
     const handleMouseDown = () => {
+      store.commit("setClickComponentStatus", false);
       console.log("handleMouseDown");
     };
     const deselectCurComponent = () => {
+      if (!isClickComponent.value) {
+        store.commit("setCurComponent", { component: null, index: null });
+      }
       console.log("deselectCurComponent");
     };
     return {
