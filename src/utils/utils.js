@@ -12,3 +12,7 @@ export function deepCopy(target) {
   }
   return target;
 }
+
+export function $(selector) {
+  return document.querySelector(selector)
+}

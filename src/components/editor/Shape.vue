@@ -45,7 +45,9 @@ export default {
     const isActive = computed(() => props.active && !props.element.isLock);
     const curComponent = computed(() => store.state.curComponent);
     const { pointList, getCursor, getPointStyle } = useGetPointStyle();
+
     const selectCurComponent = () => {};
+
     const handleMouseDownOnShape = (e) => {
       console.log("handleMouseDownOnShape");
       e.stopPropagation();
@@ -54,7 +56,30 @@ export default {
         component: props.element,
         index: props.index,
       });
+      if (props.element.isLock) return;
+
       getCursor(curComponent.value); // 根据旋转角度获取光标位置
+      const pos = { ...props.defaultStyle };
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const startLeft = pos.left;
+      const startTop = pos.top;
+
+      const move = (moveEvent) => {
+        console.log("shape mouse move");
+
+        const curX = moveEvent.clientX;
+        const curY = moveEvent.clientY;
+        pos.left = curX - startX + startLeft;
+        pos.top = curY - startY + startTop;
+        store.commit("setShapeStyle", pos);
+      };
+      const up = (e) => {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+      };
+      document.addEventListener("mouseup", up);
+      document.addEventListener("mousemove", move);
     };
 
     return {

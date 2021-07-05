@@ -1,6 +1,6 @@
 <template>
   <div class="picture">
-    <img :src="propValue" />
+    <img :src="propValue" draggable="false"/>
   </div>
 </template>
 

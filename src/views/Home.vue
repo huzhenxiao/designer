@@ -54,18 +54,17 @@ export default {
       component.style.top = e.offsetY;
       component.id = uuidv4();
       store.commit("addComponent", { component });
-      console.log(component);
-      console.log(store);
     };
     const handleDragOver = (e) => {
       e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
       console.log("handleDragOver");
     };
     const handleMouseDown = () => {
       store.commit("setClickComponentStatus", false);
       console.log("handleMouseDown");
     };
-    const deselectCurComponent = () => {
+    const deselectCurComponent = (e) => {
       if (!isClickComponent.value) {
         store.commit("setCurComponent", { component: null, index: null });
       }

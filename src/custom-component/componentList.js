@@ -58,7 +58,7 @@ const list = [
       icon: 'el-icon-picture',
       propValue: logo,
       style: {
-          width: 300,
+          width: 200,
           height: 200,
           borderRadius: '',
       },
