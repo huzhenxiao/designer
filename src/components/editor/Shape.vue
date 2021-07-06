@@ -5,13 +5,14 @@
     @click="selectCurComponent"
     @mousedown="handleMouseDownOnShape"
   >
-    <i class="el-icon-refresh-right" v-show="isActive"></i>
+    <i class="el-icon-refresh-right" v-show="isActive" @mousedown="handleRotate"></i>
     <i class="el-icon-lock" v-show="element.isLock"></i>
     <span
       class="shape-point"
       v-for="item in isActive ? pointList : []"
       :key="item"
       :style="getPointStyle(item, defaultStyle)"
+      @mousedown="handleMouseDownOnPoint(item,$event)"
     ></span>
     <slot></slot>
   </div>
@@ -21,6 +22,7 @@
 import { useStore } from "vuex";
 import { computed } from "vue";
 import { useGetPointStyle } from "./shape";
+import {throttle} from 'utils/utils'
 export default {
   props: {
     active: {
@@ -74,6 +76,7 @@ export default {
         pos.top = curY - startY + startTop;
         store.commit("setShapeStyle", pos);
       };
+      // const throttleMove = throttle(move,16);
       const up = (e) => {
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", up);
@@ -82,11 +85,22 @@ export default {
       document.addEventListener("mousemove", move);
     };
 
+    const handleMouseDownOnPoint = (point,e)=>{
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    const handleRotate = (e)=>{
+      // todo
+    }
+
     return {
       isActive,
       pointList,
       selectCurComponent,
       handleMouseDownOnShape,
+      handleMouseDownOnPoint,
+      handleRotate,
       getPointStyle,
     };
   },
