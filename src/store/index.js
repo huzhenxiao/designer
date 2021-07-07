@@ -1,6 +1,7 @@
 import { createStore } from "vuex";
-import compose from './compose';
-import contextmenu from './contextmenu'
+import compose from "./compose";
+import contextmenu from "./contextmenu";
+import lock from "./lock";
 
 const store = createStore({
   state() {
@@ -21,12 +22,12 @@ const store = createStore({
         height: 740,
         scale: 100,
       },
-      
     };
   },
   mutations: {
     ...compose.mutations,
     ...contextmenu.mutations,
+    ...lock.mutations,
     addComponent(state, { component, index }) {
       if (index !== undefined) {
         state.componentData.splice(index, 0, component);
@@ -47,6 +48,16 @@ const store = createStore({
       if (width) curComponent.style.width = width;
       if (height) curComponent.style.height = height;
       if (rotate) curComponent.style.rotate = rotate;
+    },
+    deleteComponent(state, index) {
+      if (index === undefined) {
+        index = state.curComponentIndex;
+      }
+      if (index === state.curComponentIndex) {
+        state.curComponent = null;
+        state.curComponentIndex = null;
+      }
+      state.componentData.splice(index, 1);
     },
   },
 });

@@ -4,19 +4,19 @@
     v-show="menuShow"
     :style="{ left: `${menuLeft}px`, top: `${menuTop}px` }"
   >
-    <ul>
+    <ul @mouseup="handleMouseUp">
       <template v-if="curComponent">
         <template v-if="!curComponent.isLock">
           <li>复制</li>
           <li>剪切</li>
-          <li>删除</li>
-          <li>锁定</li>
+          <li @click="deleteComponent">删除</li>
+          <li @click="lock">锁定</li>
           <li>置顶</li>
           <li>置底</li>
           <li>上移</li>
           <li>下移</li>
         </template>
-        <li v-else>解锁</li>
+        <li v-else @click="unlock">解锁</li>
       </template>
       <li v-else>粘贴</li>
     </ul>
@@ -33,11 +33,28 @@ export default {
     const menuLeft = computed(() => store.state.menuLeft);
     const menuTop = computed(() => store.state.menuTop);
     const curComponent = computed(() => store.state.curComponent);
+
+    const handleMouseUp = (e)=>{
+      store.commit('setClickComponentStatus', true)
+    }
+    const lock = (e) => {
+      store.commit("lock");
+    };
+    const unlock = (e) => {
+      store.commit("unlock");
+    };
+    const deleteComponent = (e) => {
+      store.commit("deleteComponent");
+    };
     return {
       menuShow,
       menuLeft,
       menuTop,
       curComponent,
+      handleMouseUp,
+      lock,
+      unlock,
+      deleteComponent,
     };
   },
 };

@@ -28,7 +28,6 @@
       :active="item === curComponent"
       :element="item"
       :index="index"
-      :class="{ lock: item.isLock }"
     >
       <component
         class="component"
@@ -111,10 +110,7 @@ export default {
     };
     const handleMouseDown = (e) => {
       console.log("editor handleMouseDown");
-      // 0 左击 1 滚轮 2 右击
-      if (e.button !== 2) {
-        store.commit("hideContextMenu");
-      }
+      
       // 如果没有选中组件 在画布上点击时需要调用 e.preventDefault() 防止触发 drop 事件
       if (!curComponent.value) {
         e.preventDefault();
@@ -190,10 +186,6 @@ export default {
   position: relative;
   background: #fff;
   margin: auto;
-
-  .lock {
-    opacity: 0.5;
-  }
 }
 .edit {
   .component {

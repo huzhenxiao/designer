@@ -6,7 +6,7 @@
     @mousedown="handleMouseDownOnShape"
   >
     <i class="el-icon-refresh-right" v-show="isActive" @mousedown="handleRotate"></i>
-    <i class="el-icon-lock" v-show="element.isLock"></i>
+    <i class="el-icon-lock" v-show="element.isLock && active"></i>
     <span
       class="shape-point"
       v-for="item in isActive ? pointList : []"

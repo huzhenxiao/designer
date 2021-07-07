@@ -68,6 +68,10 @@ export default {
       if (!isClickComponent.value) {
         store.commit("setCurComponent", { component: null, index: null });
       }
+      // 0 左击 1 滚轮 2 右击
+      if (e.button !== 2) {
+        store.commit("hideContextMenu");
+      }
       console.log("deselectCurComponent");
     };
     return {
