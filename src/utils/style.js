@@ -1,4 +1,4 @@
-export function getStyle(style = {}, filter = []) {
+export function getStyleExclude(style = {}, filter = []) {
   const needUnit = [
     "fontSize",
     "width",

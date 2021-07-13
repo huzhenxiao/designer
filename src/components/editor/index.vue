@@ -50,7 +50,7 @@
 import { ref, computed, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { changeStyleWithScale } from "utils/translate";
-import { getStyle } from "utils/style";
+import { getStyleExclude } from "utils/style";
 import Grid from "./Grid.vue";
 import Shape from "./Shape.vue";
 import Area from "./Area.vue";
@@ -86,7 +86,7 @@ export default {
       }, {});
     };
     const getComponentStyle = (style) =>
-      getStyle(style, ["top", "left", "width", "height", "rotate"]);
+      getStyleExclude(style, ["top", "left", "width", "height", "rotate"]);
 
     const handleInput = (element, { height, width }) => {
       // 根据文本组件高度调整shape高度
