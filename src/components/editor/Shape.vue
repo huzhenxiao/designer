@@ -55,6 +55,7 @@ export default {
     const isActive = computed(() => props.active && !props.element.isLock);
     const curComponent = computed(() => store.state.curComponent);
     const editor = computed(() => store.state.editor);
+    const throttleDelay = computed(() => store.state.throttleDelay).value;
     const shapeDom = ref(null);
     const { pointList, getCursor, getPointStyle } = useGetPointStyle();
 
@@ -79,20 +80,19 @@ export default {
 
       const move = (moveEvent) => {
         console.log("shape mouse move");
-
         const curX = moveEvent.clientX;
         const curY = moveEvent.clientY;
         pos.left = curX - startX + startLeft;
         pos.top = curY - startY + startTop;
         store.commit("setShapeStyle", pos);
       };
-      // const throttleMove = throttle(move,16);
+      const throttleMove = throttle(move, throttleDelay);
       const up = (e) => {
-        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
       };
       document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", move);
+      document.addEventListener("mousemove", throttleMove);
     };
 
     const isNeedLockProportion = () => {
@@ -110,95 +110,6 @@ export default {
     const handleMouseDownOnPoint = (point, e) => {
       e.stopPropagation();
       e.preventDefault();
-      // const style = { ...props.defaultStyle };
-      // const {
-      //   left: startLeft,
-      //   top: startTop,
-      //   width: startWidth,
-      //   height: startHeight,
-      // } = style;
-
-      // const startX = e.clientX;
-      // const startY = e.clientY;
-
-      // const move = (moveEvent) => {
-      //   const curX = moveEvent.clientX;
-      //   const curY = moveEvent.clientY;
-      //   const distanceX = curX - startX;
-      //   const distanceY = curY - startY;
-
-      //   switch (point) {
-      //     case "t":
-      //       style.top = Math.min(startTop + distanceY, startTop + startHeight);
-      //       style.height = Math.abs(startHeight - distanceY);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "r":
-      //       style.left = Math.min(
-      //         startLeft,
-      //         startLeft + startWidth + distanceX
-      //       );
-      //       style.width = Math.abs(startWidth + distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "b":
-      //       style.top = Math.min(startTop, startTop + startHeight + distanceY);
-      //       style.height = Math.abs(startHeight + distanceY);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "l":
-      //       style.left = Math.min(
-      //         startLeft + distanceX,
-      //         startLeft + startWidth
-      //       );
-      //       style.width = Math.abs(startWidth - distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "lt":
-      //       style.top = Math.min(startTop + distanceY, startTop + startHeight);
-      //       style.height = Math.abs(startHeight - distanceY);
-      //       style.left = Math.min(
-      //         startLeft + distanceX,
-      //         startLeft + startWidth
-      //       );
-      //       style.width = Math.abs(startWidth - distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "rt":
-      //       style.top = Math.min(startTop + distanceY, startTop + startHeight);
-      //       style.height = Math.abs(startHeight - distanceY);
-      //       style.left = Math.min(
-      //         startLeft,
-      //         startLeft + startWidth + distanceX
-      //       );
-      //       style.width = Math.abs(startWidth + distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "rb":
-      //       style.top = Math.min(startTop, startTop + startHeight + distanceY);
-      //       style.height = Math.abs(startHeight + distanceY);
-      //       style.left = Math.min(
-      //         startLeft,
-      //         startLeft + startWidth + distanceX
-      //       );
-      //       style.width = Math.abs(startWidth + distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     case "lb":
-      //       style.top = Math.min(startTop, startTop + startHeight + distanceY);
-      //       style.height = Math.abs(startHeight + distanceY);
-      //       style.left = Math.min(
-      //         startLeft + distanceX,
-      //         startLeft + startWidth
-      //       );
-      //       style.width = Math.abs(startWidth - distanceX);
-      //       store.commit("setShapeStyle", style);
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      // };
-      
       const style = { ...props.defaultStyle };
       // 宽高比
       const proportion = style.width / style.height;
@@ -239,12 +150,13 @@ export default {
         );
         store.commit("setShapeStyle", style);
       };
+      const throttleMove = throttle(move, throttleDelay);
       const up = () => {
-        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
       };
       document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", move);
+      document.addEventListener("mousemove", throttleMove);
     };
 
     const handleRotate = (e) => {
@@ -275,14 +187,14 @@ export default {
         pos.rotate = rotateDegAfter - rotateDegBefore + startRotate;
         store.commit("setShapeStyle", pos);
       };
+      const throttleMove = throttle(move, throttleDelay);
       const up = () => {
-        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
         getCursor(curComponent.value);
       };
-
       document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", move);
+      document.addEventListener("mousemove", throttleMove);
     };
 
     return {

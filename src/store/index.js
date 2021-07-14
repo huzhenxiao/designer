@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-06-30 18:21:58
+ * @LastEditTime: 2021-07-14 22:51:20
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /my-designer/src/store/index.js
+ */
 import { createStore } from "vuex";
 import compose from "./compose";
 import contextmenu from "./contextmenu";
@@ -22,6 +30,7 @@ const store = createStore({
         height: 740,
         scale: 100,
       },
+      throttleDelay:1000/60,
     };
   },
   mutations: {

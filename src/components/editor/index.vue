@@ -51,10 +51,12 @@ import { ref, computed, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { changeStyleWithScale } from "utils/translate";
 import { getStyleExclude } from "utils/style";
+import { throttle } from "utils/utils";
 import Grid from "./Grid.vue";
 import Shape from "./Shape.vue";
 import Area from "./Area.vue";
 import ContextMenu from "./ContextMenu.vue";
+
 
 export default {
   components: {
@@ -74,6 +76,7 @@ export default {
     const canvasStyleData = computed(() => store.state.canvasStyleData);
     const curComponent = computed(() => store.state.curComponent);
     const editor = computed(() => store.state.editor);
+    const throttleDelay = computed(() => store.state.throttleDelay).value;
 
     const getShapeStyle = (style) => {
       return ["width", "height", "top", "left", "rotate"].reduce((pre, key) => {
@@ -130,7 +133,6 @@ export default {
 
       const move = (moveEvent) => {
         console.log("editor mouse move");
-
         width.value = Math.abs(moveEvent.clientX - startX);
         height.value = Math.abs(moveEvent.clientY - startY);
         if (moveEvent.clientX < startX) {
@@ -140,8 +142,9 @@ export default {
           start.y = moveEvent.clientY - editorY;
         }
       };
+      const throttleMove = throttle(move, throttleDelay);
       const up = (e) => {
-        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
 
         if (e.clientX === startX && e.clientY === startY) {
@@ -150,7 +153,7 @@ export default {
         // this.createGroup()
       };
       document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", move);
+      document.addEventListener("mousemove", throttleMove);
     };
     const handleContextMenu = (e) => {
       console.log("handleContextMenu");

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-07-01 22:55:54
+ * @LastEditTime: 2021-07-14 22:44:55
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /my-designer/src/utils/utils.js
+ */
 export function deepCopy(target) {
   if (typeof target == "object") {
     const result = Array.isArray(target) ? [] : {};
@@ -17,7 +25,7 @@ export function $(selector) {
   return document.querySelector(selector);
 }
 
-export function throttle(fn, delay) {
+export function throttle(fn, delay = 60) {
   let pre = Date.now();
   return (...args) => {
     const now = Date.now();

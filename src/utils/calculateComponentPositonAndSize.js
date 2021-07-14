@@ -3,6 +3,7 @@ import {
   calculateRotatedPointCoordinate,
 } from "utils/translate";
 
+// 根据左上点和对称点计算出中心点，根据中心点和旋转角逆向计算出旋转前的左上和对称点坐标，其他3个角同理
 function calculateLeftTop(
   style,
   curPosition,
@@ -128,6 +129,7 @@ function calculateLeftBottom(
   }
 }
 
+// top点只能使用y坐标，x坐标是不准的，以curPoint为中心逆向再正向旋转得到旋转后的top点正确坐标，其他3个点同理
 function calculateTop(
   style,
   curPosition,
