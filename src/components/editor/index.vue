@@ -13,12 +13,11 @@
         canvasStyleData.scale
       )}px`,
     }"
-    @mousedown="handleMouseDown"
+    @mousedown="handleMouseDownOnEditor"
     @contextmenu="handleContextMenu"
   >
     <!-- 网格线 -->
     <Grid />
-
     <!-- 画布组件展示 -->
     <Shape
       v-for="(item, index) in componentData"
@@ -42,7 +41,12 @@
     <!-- 右键菜单 -->
     <ContextMenu />
     <!-- 选中区域 -->
-    <Area v-show="isShowArea" :width="width" :height="height" :start="start" />
+    <Area
+      v-show="areaIsShow"
+      :width="areaWidth"
+      :height="areaHeight"
+      :start="areaStart"
+    />
   </div>
 </template>
 
@@ -56,7 +60,7 @@ import Grid from "./Grid.vue";
 import Shape from "./Shape.vue";
 import Area from "./Area.vue";
 import ContextMenu from "./ContextMenu.vue";
-
+import { useGetStyle, useGetArea } from "./index";
 
 export default {
   components: {
@@ -66,10 +70,6 @@ export default {
     ContextMenu,
   },
   setup() {
-    onMounted(() => {
-      store.commit("getEditor");
-    });
-
     const isEdit = ref(true);
     const store = useStore();
     const componentData = computed(() => store.state.componentData);
@@ -78,42 +78,22 @@ export default {
     const editor = computed(() => store.state.editor);
     const throttleDelay = computed(() => store.state.throttleDelay).value;
 
-    const getShapeStyle = (style) => {
-      return ["width", "height", "top", "left", "rotate"].reduce((pre, key) => {
-        if (key === "rotate") {
-          pre["transform"] = `rotate(${style[key]}deg)`;
-        } else {
-          pre[key] = `${style[key]}px`;
-        }
-        return pre;
-      }, {});
-    };
-    const getComponentStyle = (style) =>
-      getStyleExclude(style, ["top", "left", "width", "height", "rotate"]);
+    const { getShapeStyle, getComponentStyle } = useGetStyle();
 
-    const handleInput = (element, { height, width }) => {
-      // 根据文本组件高度调整shape高度
-      store.commit("setShapeStyle", { height, width });
-    };
+    const {
+      areaWidth,
+      areaHeight,
+      areaStart,
+      areaIsShow,
+      hideArea,
+    } = useGetArea();
 
-    const width = ref(0);
-    const height = ref(0);
     let editorX = 0;
     let editorY = 0;
-    const start = reactive({
-      x: 0,
-      y: 0,
-    });
-    const isShowArea = ref(false);
 
-    const hideArea = () => {
-      width.value = 0;
-      height.value = 0;
-      isShowArea.value = false;
-    };
-    const handleMouseDown = (e) => {
-      console.log("editor handleMouseDown");
-      
+    const handleMouseDownOnEditor = (e) => {
+      console.log("handleMouseDownOnEditor");
+
       // 如果没有选中组件 在画布上点击时需要调用 e.preventDefault() 防止触发 drop 事件
       if (!curComponent.value) {
         e.preventDefault();
@@ -126,20 +106,20 @@ export default {
       editorY = rectInfo.y;
       const startX = e.clientX;
       const startY = e.clientY;
-      start.x = startX - editorX;
-      start.y = startY - editorY;
+      areaStart.x = startX - editorX;
+      areaStart.y = startY - editorY;
       // 展示选中区域
-      isShowArea.value = true;
+      areaIsShow.value = true;
 
       const move = (moveEvent) => {
         console.log("editor mouse move");
-        width.value = Math.abs(moveEvent.clientX - startX);
-        height.value = Math.abs(moveEvent.clientY - startY);
+        areaWidth.value = Math.abs(moveEvent.clientX - startX);
+        areaHeight.value = Math.abs(moveEvent.clientY - startY);
         if (moveEvent.clientX < startX) {
-          start.x = moveEvent.clientX - editorX;
+          areaStart.x = moveEvent.clientX - editorX;
         }
         if (moveEvent.clientY < startY) {
-          start.y = moveEvent.clientY - editorY;
+          areaStart.y = moveEvent.clientY - editorY;
         }
       };
       const throttleMove = throttle(move, throttleDelay);
@@ -164,6 +144,15 @@ export default {
       const top = e.clientY - rectInfo.y;
       store.commit("showContextMenu", { left, top });
     };
+
+    const handleInput = (element, { height, width }) => {
+      // 根据文本组件高度调整shape高度
+      store.commit("setShapeStyle", { height, width });
+    };
+
+    onMounted(() => {
+      store.commit("getEditor");
+    });
     return {
       isEdit,
       componentData,
@@ -173,12 +162,12 @@ export default {
       getComponentStyle,
       handleInput,
       getShapeStyle,
-      handleMouseDown,
+      handleMouseDownOnEditor,
       handleContextMenu,
-      width,
-      height,
-      start,
-      isShowArea,
+      areaWidth,
+      areaHeight,
+      areaStart,
+      areaIsShow,
     };
   },
 };

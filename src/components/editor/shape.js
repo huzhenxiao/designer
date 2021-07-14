@@ -1,4 +1,12 @@
-import { reactive,onMounted } from "vue";
+/*
+ * @Author: your name
+ * @Date: 2021-07-04 16:04:29
+ * @LastEditTime: 2021-07-14 23:32:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /my-designer/src/components/editor/shape.js
+ */
+import { reactive, onMounted } from "vue";
 import { mod360 } from "utils/translate";
 
 // 八个角
@@ -28,10 +36,10 @@ const angleToCursor = [
   { start: 293, end: 338, cursor: "w" },
 ];
 
-const cursors = reactive({});
-
 export const useGetPointStyle = () => {
-  const getPointStyle = (point,defaultStyle) => {
+  const cursors = reactive({});
+
+  const getPointStyle = (point, defaultStyle) => {
     const { width, height } = defaultStyle;
     let newLeft = 0;
     let newTop = 0;
@@ -68,8 +76,8 @@ export const useGetPointStyle = () => {
     const rotate = mod360(curComponent.style.rotate); // 取余 360
     pointList.forEach((point) => {
       const angle = mod360(initialAngle[point] + rotate);
-      let len = -1;;
-      while (len<8) {
+      let len = -1;
+      while (len < 8) {
         len++;
         const angleLimit = angleToCursor[len];
         if (angle >= 338 || angle < 23) {
