@@ -51,3 +51,11 @@ export function calculateRotatedPointCoordinate(point, center, rotate) {
       center.y,
   };
 }
+
+export function cos(rotate){
+  return Math.cos(angleToRadian(rotate));
+}
+
+export function sin(rotate){
+  return Math.sin(angleToRadian(rotate));
+}

@@ -1,7 +1,7 @@
 import {
   getCenterPoint,
   calculateRotatedPointCoordinate,
-} from "utils/translate";
+} from "./translate";
 
 // 根据左上点和对称点计算出中心点，根据中心点和旋转角逆向计算出旋转前的左上和对称点坐标，其他3个角同理
 function calculateLeftTop(

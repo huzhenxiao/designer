@@ -54,7 +54,7 @@
 import { ref, computed, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { changeStyleWithScale } from "utils/translate";
-import { getStyleExclude } from "utils/style";
+import { getStyleExclude, getComponentRotatedStyle } from "utils/style";
 import { throttle } from "utils/utils";
 import Grid from "./Grid.vue";
 import Shape from "./Shape.vue";
@@ -108,7 +108,6 @@ export default {
       const startY = e.clientY;
       areaStart.x = startX - editorX;
       areaStart.y = startY - editorY;
-      // 展示选中区域
       areaIsShow.value = true;
 
       const move = (moveEvent) => {
@@ -130,11 +129,70 @@ export default {
         if (e.clientX === startX && e.clientY === startY) {
           return hideArea();
         }
-        // this.createGroup()
+        createGroup();
       };
       document.addEventListener("mouseup", up);
       document.addEventListener("mousemove", throttleMove);
     };
+
+    function createGroup() {
+      const areaData = getSelectAreaData();
+      if (areaData.length === 0) {
+        return hideArea();
+      }
+      let top = Infinity,
+        left = Infinity,
+        right = -Infinity,
+        bottom = -Infinity;
+      areaData.forEach((component) => {
+        let style;
+        if (component.component === "Group") {
+        } else {
+          style = getComponentRotatedStyle(component.style);
+        }
+
+        if (style.left < left) left = style.left;
+        if (style.top < top) top = style.top;
+        if (style.right > right) right = style.right;
+        if (style.bottom > bottom) bottom = style.bottom;
+      });
+
+      areaStart.x = left;
+      areaStart.y = top;
+      areaWidth.value = right - left;
+      areaHeight.value = bottom - top;
+
+      // 保存选中区域大小信息和区域内的组件数据
+      store.commit("setAreaData", {
+        style: {
+          left,
+          top,
+          width: areaWidth.value,
+          height: areaHeight.value,
+        },
+        components: areaData,
+      });
+    }
+
+    function getSelectAreaData() {
+      const result = [];
+      const { x, y } = areaStart;
+
+      componentData.value.forEach((component) => {
+        if (component.isLock) return;
+        const { left, top, width, height } = component.style;
+        if (
+          x <= left &&
+          y <= top &&
+          left + width <= x + areaWidth.value &&
+          top + height < y + areaHeight.value
+        ) {
+          result.push(component);
+        }
+      });
+      return result;
+    }
+
     const handleContextMenu = (e) => {
       console.log("handleContextMenu");
       e.stopPropagation();
