@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-07-01 22:55:54
- * @LastEditTime: 2021-07-14 22:44:55
+ * @LastEditTime: 2021-07-17 16:34:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/utils/utils.js
@@ -34,4 +34,10 @@ export function throttle(fn, delay = 60) {
       pre = Date.now();
     }
   };
+}
+
+export function swap(arr,i,j){
+  const temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp;
 }

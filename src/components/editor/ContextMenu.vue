@@ -11,10 +11,10 @@
           <li>剪切</li>
           <li @click="deleteComponent">删除</li>
           <li @click="lock">锁定</li>
-          <li>置顶</li>
-          <li>置底</li>
-          <li>上移</li>
-          <li>下移</li>
+          <li @click="setTop">置顶</li>
+          <li @click="setBottom">置底</li>
+          <li @click="setUp">上移</li>
+          <li @click="setDown">下移</li>
         </template>
         <li v-else @click="unlock">解锁</li>
       </template>
@@ -34,9 +34,9 @@ export default {
     const menuTop = computed(() => store.state.menuTop);
     const curComponent = computed(() => store.state.curComponent);
 
-    const handleMouseUp = (e)=>{
-      store.commit('setClickComponentStatus', true)
-    }
+    const handleMouseUp = (e) => {
+      store.commit("setClickComponentStatus", true);
+    };
     const lock = (e) => {
       store.commit("lock");
     };
@@ -45,6 +45,18 @@ export default {
     };
     const deleteComponent = (e) => {
       store.commit("deleteComponent");
+    };
+    const setTop = () => {
+      store.commit("setTopComponent");
+    };
+    const setBottom = () => {
+      store.commit("setBottomComponent");
+    };
+    const setUp = () => {
+      store.commit("setUpComponent");
+    };
+    const setDown = () => {
+      store.commit("setDownComponent");
     };
     return {
       menuShow,
@@ -55,6 +67,10 @@ export default {
       lock,
       unlock,
       deleteComponent,
+      setTop,
+      setBottom,
+      setUp,
+      setDown,
     };
   },
 };

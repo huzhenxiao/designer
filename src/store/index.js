@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 18:21:58
- * @LastEditTime: 2021-07-14 22:51:20
+ * @LastEditTime: 2021-07-17 17:11:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/store/index.js
@@ -10,6 +10,7 @@ import { createStore } from "vuex";
 import compose from "./compose";
 import contextmenu from "./contextmenu";
 import lock from "./lock";
+import layer from './layer'
 
 const store = createStore({
   state() {
@@ -30,13 +31,14 @@ const store = createStore({
         height: 740,
         scale: 100,
       },
-      throttleDelay:1000/60,
+      throttleDelay: 1000 / 60,
     };
   },
   mutations: {
     ...compose.mutations,
     ...contextmenu.mutations,
     ...lock.mutations,
+    ...layer.mutations,
     addComponent(state, { component, index }) {
       if (index !== undefined) {
         state.componentData.splice(index, 0, component);
@@ -67,6 +69,9 @@ const store = createStore({
         state.curComponentIndex = null;
       }
       state.componentData.splice(index, 1);
+    },
+    setComponentData(state, componentData = []) {
+      state.componentData = componentData;
     },
   },
 });

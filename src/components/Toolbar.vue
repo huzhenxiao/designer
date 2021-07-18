@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-06-30 21:20:32
+ * @LastEditTime: 2021-07-17 16:37:54
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /my-designer/src/components/Toolbar.vue
+-->
 <template>
   <div class="toolbar">
     <el-button>撤消</el-button>
@@ -6,7 +14,9 @@
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
     <!-- <el-button @click="preview" style="margin-left: 10px;">预览</el-button> -->
     <!-- <el-button @click="save">保存</el-button> -->
-    <!-- <el-button @click="clearCanvas">清空画布</el-button> -->
+    <el-button @click="clearCanvas">清空画布</el-button>
+    <el-button @click="setTop">置顶</el-button>
+    <el-button @click="setBottom">置底</el-button>
     <!-- <el-button @click="compose" :disabled="!areaData.components.length">组合</el-button> -->
     <!-- <el-button @click="decompose" 
     :disabled="!curComponent || curComponent.isLock || curComponent.component != 'Group'">拆分</el-button> -->
@@ -40,13 +50,30 @@ export default {
     const lock = () => {
       store.commit("lock");
     };
+    const clearCanvas = ()=>{
+      store.commit('setComponentData',[])
+    }
+
+    const setTop = ()=>{
+      store.commit("setTopComponent");
+    }
+    
+    const setBottom = ()=>{
+      store.commit("setBottomComponent");
+    }
+
     const unlock = () => {
       store.commit("unlock");
     };
+    
+
     return {
       curComponent,
       lock,
       unlock,
+      clearCanvas,
+      setTop,
+      setBottom,
     };
   },
 };
