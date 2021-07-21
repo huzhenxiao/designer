@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-06-30 22:26:05
+ * @LastEditTime: 2021-07-22 00:01:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /designer/my-designer/src/custom-component/componentList.js
+ */
 import logo from 'assets/logo.png'
 // 公共样式
 export const commonStyle = {
@@ -25,11 +33,12 @@ const list = [
           width: 200,
           height: 22,
           fontSize: 14,
-          fontWeight: 500,
-          lineHeight: '',
-          letterSpacing: 0,
-          textAlign: '',
           color: '',
+          lineHeight: '',
+          fontWeight: 500,
+          textAlign: '',
+          verticalAlign: '',
+          letterSpacing: 0,
       },
   },
   {
@@ -40,20 +49,21 @@ const list = [
       style: {
           width: 100,
           height: 34,
-          borderWidth: 1,
-          borderColor: '',
-          borderRadius: '',
           fontSize: 14,
-          fontWeight: 500,
-          lineHeight: '',
-          letterSpacing: 0,
-          textAlign: '',
           color: '',
+          lineHeight: '',
+          fontWeight: 500,
           backgroundColor: '',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          borderColor: '#000',
+          borderRadius: '',
+          textAlign: '',
+          letterSpacing: 0,
       },
   },
   {
-      component: 'picture', 
+      component: 'pic', 
       label: '图片', 
       icon: 'el-icon-picture',
       propValue: logo,
@@ -72,16 +82,16 @@ const list = [
           width: 200,
           height: 200,
           fontSize: 14,
-          fontWeight: 500,
-          lineHeight: '',
-          letterSpacing: 0,
-          textAlign: 'center',
           color: '',
-          borderColor: '#000',
+          lineHeight: '',
+          fontWeight: 500,
+          textAlign: 'center',
+          verticalAlign: '',
+          letterSpacing: 0,
           borderWidth: 1,
-          backgroundColor: '',
           borderStyle: 'solid',
-          verticalAlign: 'middle',
+          borderColor: '#000',
+          backgroundColor: '',
       },
   },
 ]

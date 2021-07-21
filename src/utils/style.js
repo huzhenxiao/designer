@@ -12,6 +12,7 @@ import { cos, sin } from "./translate";
 export function getStyleExclude(style = {}, filter = []) {
   const needUnit = [
     "fontSize",
+    "lineHeight",
     "width",
     "height",
     "top",

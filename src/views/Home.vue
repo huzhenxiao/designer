@@ -18,7 +18,16 @@
           <Editor />
         </div>
       </section>
-      <!-- <section class="right">right</section> -->
+      <section class="right">
+        <el-tabs v-model="activeTab">
+          <el-tab-pane label="数据" name="data">
+            <data-list v-if="curComponent" />
+          </el-tab-pane>
+          <el-tab-pane label="样式" name="style">
+            <attr-list v-if="curComponent" />
+          </el-tab-pane>
+        </el-tabs>
+      </section>
     </main>
   </div>
 </template>
@@ -31,7 +40,9 @@ import ComponentList from "comps/ComponentList.vue";
 import Editor from "comps/editor/Index.vue";
 import { deepCopy } from "utils/utils";
 import { v4 as uuidv4 } from "uuid";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import DataList from "comps/DataList.vue";
+import AttrList from "comps/AttrList.vue";
 
 export default {
   name: "home",
@@ -39,6 +50,8 @@ export default {
     Toolbar,
     ComponentList,
     Editor,
+    DataList,
+    AttrList,
   },
   setup() {
     const store = useStore();
@@ -74,11 +87,17 @@ export default {
       }
       console.log("deselectCurComponent");
     };
+
+    const activeTab = ref("style");
+    const curComponent = computed(() => store.state.curComponent);
+
     return {
       handleDrop,
       handleDragOver,
       handleMouseDown,
       deselectCurComponent,
+      activeTab,
+      curComponent,
     };
   },
 };
@@ -116,6 +135,9 @@ export default {
         overflow: auto;
       }
     }
+  }
+  ::v-deep .el-tabs__nav-wrap {
+    padding: 0 20px;
   }
 }
 </style>
