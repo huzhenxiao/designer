@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-24 16:02:06
+ * @LastEditTime: 2021-07-25 01:37:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
 -->
 <template>
-  <div class="attr-list">
+  <div class="data-list">
+    <p class="component-name">{{curComponent.label}}</p>
     <component
       v-for="item in dataList"
       :key="item.label"
@@ -37,10 +38,9 @@ export default {
       },
     };
     const store = useStore();
-    const propValue = computed(() => store.state.curComponent.propValue);
-    const businessData = computed(() => store.state.curComponent.businessData);
+    const curComponent = computed(() => store.state.curComponent);
     const dataList = computed(() => {
-      const result = Object.keys(businessData.value).map((key) => ({
+      const result = Object.keys(store.state.curComponent.businessData).map((key) => ({
         key,
         value: store.state.curComponent.businessData[key],
         label: dataMap[key].label,
@@ -64,6 +64,7 @@ export default {
       store.commit("setCurComponentBusinessData", { key, value });
     };
     return {
+      curComponent,
       dataList,
       handleValueChange,
     };
@@ -72,8 +73,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.attr-list {
+.data-list {
   width: 100%;
   height: 100%;
+
+  .component-name{
+    font-size: 16px;
+    color: #999;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 15px;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+  }
 }
 </style>

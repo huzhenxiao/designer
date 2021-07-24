@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-30 21:20:32
- * @LastEditTime: 2021-07-25 01:08:17
+ * @LastEditTime: 2021-07-25 02:38:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/Toolbar.vue
@@ -35,9 +35,8 @@
     >
     <div class="canvas-config">
       <span class="label">画布大小</span>
-      <!-- <input v-model="canvasStyleData.width"> -->
       <el-input
-        :model-value="canvasStyleData.width"
+        :modelValue="canvasStyleData.width"
         @input="handleCanvasStyleChange('width', $event)"
         size="mini"
       >
@@ -45,10 +44,9 @@
           <span>px</span>
         </template>
       </el-input>
-      <span>*</span>
-      <!-- <input v-model="canvasStyleData.height"> -->
+      <span>&nbsp;*&nbsp;</span>
       <el-input
-        :model-value="canvasStyleData.height"
+        :modelValue="canvasStyleData.height"
         @input="handleCanvasStyleChange('height', $event)"
         size="mini"
       >
@@ -60,7 +58,7 @@
     <div class="canvas-config">
       <span class="label">缩放</span>
       <el-select
-        :model-value="canvasStyleData.scale"
+        :modelValue="canvasStyleData.scale"
         @change="handleScaleChange"
         size="medium"
       >
@@ -83,86 +81,6 @@ import { useRouter, useRoute } from "vue-router";
 import { deepClone } from "utils/utils";
 export default {
   setup() {
-    const store = useStore();
-    const curComponent = computed(() => store.state.curComponent);
-    const componentData = computed(() => store.state.componentData);
-    const canvasStyleData = computed(() => store.state.canvasStyleData);
-
-    const router = useRouter();
-    const lock = () => {
-      store.commit("lock");
-    };
-    const clearCanvas = () => {
-      store.commit("setComponentData", []);
-    };
-
-    const setTop = () => {
-      store.commit("setTopComponent");
-    };
-
-    const setBottom = () => {
-      store.commit("setBottomComponent");
-    };
-
-    const unlock = () => {
-      store.commit("unlock");
-    };
-
-    const preview = () => {
-      store.commit("setEditMode", "preview");
-      const routeUrl = router.resolve({
-        path: "/preview",
-      });
-      sessionStorage.setItem(
-        "componentData",
-        JSON.stringify(componentData.value)
-      );
-      window.open(routeUrl.href, "_blank");
-    };
-
-    const save = () => {
-      sessionStorage.setItem(
-        "componentData",
-        JSON.stringify(componentData.value)
-      );
-    };
-
-    const handleCanvasStyleChange = (key, value) => {
-      store.commit("setCanvasStyleData", { key, value });
-    };
-
-    const needToChangeStyle = [
-      "top",
-      "left",
-      "width",
-      "height",
-      "fontSize",
-      "borderWidth",
-      "lineHeight",
-      "borderRadius",
-    ];
-
-    const getScaleValue = (oldValue, newScale) =>
-      ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) *
-        parseInt(newScale)) /
-      100;
-    const handleScaleChange = (newScale) => {
-      newScale = newScale || canvasStyleData.value.scale;
-      const newComponentData = deepClone(componentData.value);
-      newComponentData.forEach((component) => {
-        Object.keys(component.style).forEach((key) => {
-          if (needToChangeStyle.includes(key)) {
-            component.style[key] = getScaleValue(
-              component.style[key],
-              newScale
-            );
-          }
-        });
-      });
-      store.commit("setComponentData", newComponentData);
-      store.commit("setCanvasStyleData", { key: "scale", value: newScale });
-    };
-
     const scaleOptions = [
       {
         label: "50%",
@@ -193,6 +111,92 @@ export default {
         value: 300,
       },
     ];
+    const store = useStore();
+    const router = useRouter();
+    const curComponent = computed(() => store.state.curComponent);
+    const componentData = computed(() => store.state.componentData);
+    const canvasStyleData = computed(() => store.state.canvasStyleData);
+
+    const lock = () => {
+      store.commit("lock");
+    };
+
+    const clearCanvas = () => {
+      store.commit("setComponentData", []);
+    };
+
+    const setTop = () => {
+      store.commit("setTopComponent");
+    };
+
+    const setBottom = () => {
+      store.commit("setBottomComponent");
+    };
+
+    const unlock = () => {
+      store.commit("unlock");
+    };
+
+    const preview = () => {
+      store.commit("setEditMode", "preview");
+      const routeUrl = router.resolve({
+        path: "/preview",
+      });
+      sessionStorage.setItem(
+        "canvasData",
+        JSON.stringify({
+          componentData:componentData.value,
+          canvasStyleData:canvasStyleData.value,
+        })
+      );
+      window.open(routeUrl.href, "_blank");
+    };
+
+    const save = () => {
+      sessionStorage.setItem(
+        "canvasData",
+        JSON.stringify({
+          componentData:componentData.value,
+          canvasStyleData:canvasStyleData.value,
+        })
+      );
+    };
+
+    const handleCanvasStyleChange = (key, value) => {
+      store.commit("setCanvasStyleDataByKey", { key, value });
+    };
+
+    const needToChangeStyle = [
+      "top",
+      "left",
+      "width",
+      "height",
+      "fontSize",
+      "borderWidth",
+      "lineHeight",
+      "borderRadius",
+    ];
+    const getScaleValue = (oldValue, newScale) =>
+      ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) *
+        parseInt(newScale)) /
+      100;
+    const handleScaleChange = (newScale) => {
+      newScale = newScale || canvasStyleData.value.scale;
+      const newComponentData = deepClone(componentData.value);
+      newComponentData.forEach((component) => {
+        Object.keys(component.style).forEach((key) => {
+          if (needToChangeStyle.includes(key)) {
+            component.style[key] = getScaleValue(
+              component.style[key],
+              newScale
+            );
+          }
+        });
+      });
+      store.commit("setComponentData", newComponentData);
+      store.commit("setCanvasStyleDataByKey", { key: "scale", value: newScale });
+    };
+
     return {
       curComponent,
       canvasStyleData,

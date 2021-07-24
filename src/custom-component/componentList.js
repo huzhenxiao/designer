@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 22:26:05
- * @LastEditTime: 2021-07-24 15:42:44
+ * @LastEditTime: 2021-07-25 02:36:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/custom-component/componentList.js
@@ -35,7 +35,7 @@ const list = [
       height: 22,
       fontSize: 14,
       color: "",
-      lineHeight: "",
+      lineHeight: 14,
       fontWeight: 500,
       textAlign: "",
       verticalAlign: "",
@@ -53,7 +53,7 @@ const list = [
       height: 34,
       fontSize: 14,
       color: "",
-      lineHeight: "",
+      lineHeight: 14,
       fontWeight: 500,
       backgroundColor: "",
       borderWidth: 1,
@@ -79,7 +79,7 @@ const list = [
   {
     component: "rect-shape",
     label: "矩形",
-    propValue: "&nbsp;",
+    propValue: "",
     icon: "el-icon-full-screen",
     businessData: {},
     style: {
@@ -87,7 +87,7 @@ const list = [
       height: 200,
       fontSize: 14,
       color: "",
-      lineHeight: "",
+      lineHeight: 14,
       fontWeight: 500,
       textAlign: "center",
       verticalAlign: "",

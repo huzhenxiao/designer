@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 18:21:58
- * @LastEditTime: 2021-07-24 22:10:24
+ * @LastEditTime: 2021-07-25 02:32:28
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/store/index.js
@@ -10,7 +10,7 @@ import { createStore } from "vuex";
 import compose from "./compose";
 import contextmenu from "./contextmenu";
 import lock from "./lock";
-import layer from './layer'
+import layer from "./layer";
 
 const store = createStore({
   state() {
@@ -18,7 +18,7 @@ const store = createStore({
       ...compose.state,
       ...contextmenu.state,
 
-      editMode: "edit", // 编辑器模式 edit preview
+      editMode: "", // 编辑器模式 edit preview
       componentData: [], // 画布组件数据
       // 点击画布时是否点中组件，主要用于取消选中组件用。
       // 如果没点中组件，并且在画布空白处弹起鼠标，则取消当前组件的选中状态
@@ -73,23 +73,26 @@ const store = createStore({
     setComponentData(state, componentData = []) {
       state.componentData = componentData;
     },
-    setCurComponentStyle({curComponent},{key,value}){
-      if(!curComponent) return ;
+    setCurComponentStyle({ curComponent }, { key, value }) {
+      if (!curComponent) return;
       curComponent.style[key] = value;
     },
-    setCurComponentBusinessData({curComponent},{key,value}){
-      if(!curComponent) return ;
-      if(key === 'propValue'){
+    setCurComponentBusinessData({ curComponent }, { key, value }) {
+      if (!curComponent) return;
+      if (key === "propValue") {
         curComponent.propValue = value;
-      }else{
+      } else {
         curComponent.businessData[key] = value;
       }
     },
-    setEditMode(state,value){
+    setEditMode(state, value) {
       state.editMode = value;
     },
-    setCanvasStyleData({canvasStyleData},{key,value}){
+    setCanvasStyleDataByKey({ canvasStyleData }, { key, value }) {
       canvasStyleData[key] = value;
+    },
+    setCanvasStyleData(state, value) {
+      state.canvasStyleData = value;
     },
   },
 });

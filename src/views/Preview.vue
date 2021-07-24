@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-24 16:17:28
- * @LastEditTime: 2021-07-24 21:20:07
+ * @LastEditTime: 2021-07-25 02:25:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/views/Preview.vue
@@ -41,15 +41,14 @@ export default {
   },
   setup() {
     const store = useStore();
-    const componentData = JSON.parse(sessionStorage.getItem('componentData'));
-    
-    console.log('componentData',componentData);
-    
-    const canvasStyleData = computed(() => store.state.canvasStyleData);
+    const canvasData = JSON.parse(sessionStorage.getItem("canvasData"));
+    const componentData = canvasData.componentData;
+    const canvasStyleData = canvasData.canvasStyleData;
+
     return {
       changeStyleWithScale,
-      canvasStyleData,
       componentData,
+      canvasStyleData,
     };
   },
 };

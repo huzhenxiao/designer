@@ -58,9 +58,11 @@ export default {
     const isClickComponent = computed(() => store.state.isClickComponent);
 
     onBeforeMount(() => {
-      const componentData = JSON.parse(sessionStorage.getItem("componentData"));
-      if (componentData && componentData.length) {
-        store.commit("setComponentData", componentData);
+      store.commit('setEditMode','edit');
+      const canvasData = JSON.parse(sessionStorage.getItem("canvasData"));
+      if (canvasData) {
+        store.commit("setComponentData", canvasData.componentData);
+        store.commit("setCanvasStyleData", canvasData.canvasStyleData);
       }
     });
 
@@ -149,6 +151,10 @@ export default {
     .right {
       height: 100%;
       width: 260px;
+
+      ::v-deep(.el-tabs__header) {
+        margin-bottom: 0;
+      }
     }
 
     .center {

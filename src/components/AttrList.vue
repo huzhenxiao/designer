@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-25 01:04:08
+ * @LastEditTime: 2021-07-25 01:29:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
 -->
 <template>
   <div class="attr-list">
+    <p class="component-name">{{curComponent.label}}</p>
     <component
       v-for="item in styleList"
       :key="item.label"
@@ -163,9 +164,9 @@ export default {
       },
     };
     const store = useStore();
-    const style = computed(() => store.state.curComponent.style);
+    const curComponent = computed(() => store.state.curComponent);
     const styleList = computed(() =>
-      Object.keys(style.value).map((key) => ({
+      Object.keys(store.state.curComponent.style).map((key) => ({
         key,
         value: store.state.curComponent.style[key],
         label: styleMap[key].label,
@@ -180,6 +181,7 @@ export default {
       store.commit("setCurComponentStyle", { key, value });
     };
     return {
+      curComponent,
       styleList,
       handleValueChange,
     };
@@ -191,5 +193,15 @@ export default {
 .attr-list {
   width: 100%;
   height: 100%;
+
+  .component-name{
+    font-size: 16px;
+    color: #999;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 15px;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+  }
 }
 </style>
