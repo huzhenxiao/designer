@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 18:21:58
- * @LastEditTime: 2021-07-24 15:52:39
+ * @LastEditTime: 2021-07-24 22:10:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/store/index.js
@@ -84,7 +84,13 @@ const store = createStore({
       }else{
         curComponent.businessData[key] = value;
       }
-    }
+    },
+    setEditMode(state,value){
+      state.editMode = value;
+    },
+    setCanvasStyleData({canvasStyleData},{key,value}){
+      canvasStyleData[key] = value;
+    },
   },
 });
 

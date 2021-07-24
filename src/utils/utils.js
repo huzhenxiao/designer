@@ -1,17 +1,17 @@
 /*
  * @Author: your name
  * @Date: 2021-07-01 22:55:54
- * @LastEditTime: 2021-07-17 16:34:40
+ * @LastEditTime: 2021-07-25 00:14:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/utils/utils.js
  */
-export function deepCopy(target) {
+export function deepClone(target) {
   if (typeof target == "object") {
     const result = Array.isArray(target) ? [] : {};
     for (const key in target) {
       if (typeof target[key] == "object") {
-        result[key] = deepCopy(target[key]);
+        result[key] = deepClone(target[key]);
       } else {
         result[key] = target[key];
       }

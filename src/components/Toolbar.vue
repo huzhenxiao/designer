@@ -1,22 +1,22 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-30 21:20:32
- * @LastEditTime: 2021-07-17 16:37:54
+ * @LastEditTime: 2021-07-25 01:08:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/Toolbar.vue
 -->
 <template>
   <div class="toolbar">
-    <el-button>撤消</el-button>
+    <el-button size="medium">撤消</el-button>
     <!-- <el-button @click="redo">重做</el-button> -->
     <!-- <label for="input" class="insert">插入图片</label> -->
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
-    <!-- <el-button @click="preview" style="margin-left: 10px;">预览</el-button> -->
-    <!-- <el-button @click="save">保存</el-button> -->
-    <el-button @click="clearCanvas">清空画布</el-button>
-    <el-button @click="setTop">置顶</el-button>
-    <el-button @click="setBottom">置底</el-button>
+    <el-button @click="preview" size="medium">预览</el-button>
+    <el-button @click="save" size="medium">保存</el-button>
+    <el-button @click="clearCanvas" size="medium">清空画布</el-button>
+    <el-button @click="setTop" size="medium">置顶</el-button>
+    <el-button @click="setBottom" size="medium">置底</el-button>
     <!-- <el-button @click="compose" :disabled="!areaData.components.length">组合</el-button> -->
     <!-- <el-button @click="decompose" 
     :disabled="!curComponent || curComponent.isLock || curComponent.component != 'Group'">拆分</el-button> -->
@@ -24,56 +24,188 @@
     <el-button
       @click="lock"
       :disabled="!curComponent || curComponent.isLock"
+      size="medium"
       >锁定</el-button
     >
-    <el-button @click="unlock" :disabled="!curComponent || !curComponent.isLock">解锁</el-button>
-    <!-- <div class="canvas-config">
-        <span>画布大小</span>
-        <input v-model="canvasStyleData.width">
-        <span>*</span>
-        <input v-model="canvasStyleData.height">
-    </div> -->
-    <!-- <div class="canvas-config">
-        <span>画布比例</span>
-        <input v-model="scale" @input="handleScaleChange"> %
-    </div> -->
+    <el-button
+      @click="unlock"
+      :disabled="!curComponent || !curComponent.isLock"
+      size="medium"
+      >解锁</el-button
+    >
+    <div class="canvas-config">
+      <span class="label">画布大小</span>
+      <!-- <input v-model="canvasStyleData.width"> -->
+      <el-input
+        :model-value="canvasStyleData.width"
+        @input="handleCanvasStyleChange('width', $event)"
+        size="mini"
+      >
+        <template #suffix>
+          <span>px</span>
+        </template>
+      </el-input>
+      <span>*</span>
+      <!-- <input v-model="canvasStyleData.height"> -->
+      <el-input
+        :model-value="canvasStyleData.height"
+        @input="handleCanvasStyleChange('height', $event)"
+        size="mini"
+      >
+        <template #suffix>
+          <span>px</span>
+        </template>
+      </el-input>
+    </div>
+    <div class="canvas-config">
+      <span class="label">缩放</span>
+      <el-select
+        :model-value="canvasStyleData.scale"
+        @change="handleScaleChange"
+        size="medium"
+      >
+        <el-option
+          v-for="item in scaleOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+    </div>
   </div>
 </template>
 
 <script>
 import { useStore } from "vuex";
 import { computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { deepClone } from "utils/utils";
 export default {
   setup() {
     const store = useStore();
     const curComponent = computed(() => store.state.curComponent);
+    const componentData = computed(() => store.state.componentData);
+    const canvasStyleData = computed(() => store.state.canvasStyleData);
+
+    const router = useRouter();
     const lock = () => {
       store.commit("lock");
     };
-    const clearCanvas = ()=>{
-      store.commit('setComponentData',[])
-    }
+    const clearCanvas = () => {
+      store.commit("setComponentData", []);
+    };
 
-    const setTop = ()=>{
+    const setTop = () => {
       store.commit("setTopComponent");
-    }
-    
-    const setBottom = ()=>{
+    };
+
+    const setBottom = () => {
       store.commit("setBottomComponent");
-    }
+    };
 
     const unlock = () => {
       store.commit("unlock");
     };
-    
 
+    const preview = () => {
+      store.commit("setEditMode", "preview");
+      const routeUrl = router.resolve({
+        path: "/preview",
+      });
+      sessionStorage.setItem(
+        "componentData",
+        JSON.stringify(componentData.value)
+      );
+      window.open(routeUrl.href, "_blank");
+    };
+
+    const save = () => {
+      sessionStorage.setItem(
+        "componentData",
+        JSON.stringify(componentData.value)
+      );
+    };
+
+    const handleCanvasStyleChange = (key, value) => {
+      store.commit("setCanvasStyleData", { key, value });
+    };
+
+    const needToChangeStyle = [
+      "top",
+      "left",
+      "width",
+      "height",
+      "fontSize",
+      "borderWidth",
+      "lineHeight",
+      "borderRadius",
+    ];
+
+    const getScaleValue = (oldValue, newScale) =>
+      ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) *
+        parseInt(newScale)) /
+      100;
+    const handleScaleChange = (newScale) => {
+      newScale = newScale || canvasStyleData.value.scale;
+      const newComponentData = deepClone(componentData.value);
+      newComponentData.forEach((component) => {
+        Object.keys(component.style).forEach((key) => {
+          if (needToChangeStyle.includes(key)) {
+            component.style[key] = getScaleValue(
+              component.style[key],
+              newScale
+            );
+          }
+        });
+      });
+      store.commit("setComponentData", newComponentData);
+      store.commit("setCanvasStyleData", { key: "scale", value: newScale });
+    };
+
+    const scaleOptions = [
+      {
+        label: "50%",
+        value: 50,
+      },
+      {
+        label: "75%",
+        value: 75,
+      },
+      {
+        label: "100%",
+        value: 100,
+      },
+      {
+        label: "125%",
+        value: 125,
+      },
+      {
+        label: "150%",
+        value: 150,
+      },
+      {
+        label: "200%",
+        value: 200,
+      },
+      {
+        label: "300%",
+        value: 300,
+      },
+    ];
     return {
       curComponent,
+      canvasStyleData,
+      handleCanvasStyleChange,
+      handleScaleChange,
       lock,
       unlock,
       clearCanvas,
       setTop,
       setBottom,
+      preview,
+      save,
+      scaleOptions,
     };
   },
 };
@@ -82,9 +214,27 @@ export default {
 <style lang="scss" scoped>
 .toolbar {
   height: 64px;
-  padding: 0 10px;
+  padding: 13px 10px;
   line-height: 64px;
   background: #fff;
   border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+  display: flex;
+
+  .canvas-config {
+    margin-left: 10px;
+    display: flex;
+    font-size: 14px;
+    width: 300px;
+    line-height: 38px;
+
+    .label {
+      flex: 0 0 66px;
+    }
+    ::v-deep(.el-input) {
+      line-height: 38px;
+      width: 100px;
+    }
+  }
 }
 </style>

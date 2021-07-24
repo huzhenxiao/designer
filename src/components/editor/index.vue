@@ -9,7 +9,7 @@
         canvasStyleData.scale
       )}px`,
       height: `${changeStyleWithScale(
-        canvasStyleData.width,
+        canvasStyleData.height,
         canvasStyleData.scale
       )}px`,
     }"

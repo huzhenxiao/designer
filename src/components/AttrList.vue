@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-24 16:02:16
+ * @LastEditTime: 2021-07-25 01:04:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
@@ -117,7 +117,7 @@ export default {
         component: "custom-color-picker",
       },
       borderRadius: {
-        label: "边框半径",
+        label: "边框圆角",
         component: "custom-input-number",
         unit: 'px',
       },
