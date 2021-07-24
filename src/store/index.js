@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 18:21:58
- * @LastEditTime: 2021-07-21 23:08:01
+ * @LastEditTime: 2021-07-24 15:52:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/store/index.js
@@ -76,6 +76,14 @@ const store = createStore({
     setCurComponentStyle({curComponent},{key,value}){
       if(!curComponent) return ;
       curComponent.style[key] = value;
+    },
+    setCurComponentBusinessData({curComponent},{key,value}){
+      if(!curComponent) return ;
+      if(key === 'propValue'){
+        curComponent.propValue = value;
+      }else{
+        curComponent.businessData[key] = value;
+      }
     }
   },
 });

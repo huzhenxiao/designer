@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-19 21:48:46
- * @LastEditTime: 2021-07-21 22:30:02
+ * @LastEditTime: 2021-07-24 15:58:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/SetupItem.vue
@@ -14,6 +14,9 @@
     <div class="content">
       <slot></slot>
     </div>
+    <span v-if="unit" class="unit">
+      {{unit}}
+    </span>
   </div>
 </template>
 
@@ -21,6 +24,7 @@
 export default {
   props: {
     label: String,
+    unit: String,
   },
   setup() {
     return {};
@@ -31,7 +35,6 @@ export default {
 <style lang="scss" scoped>
 .custom-component-item {
   width: 100%;
-  height: 30px;
   display: flex;
   margin-bottom: 20px;
 
@@ -44,7 +47,13 @@ export default {
     flex: 0 0 60px;
   }
   .content {
-    flex: 1 1 calc(100% - 60px);
+    flex: 1 1 calc(100% - 90px);
+  }
+  .unit{
+    line-height: 30px;
+    font-size: 14px;
+    color: #666;
+    flex: 0 0 30px;
   }
 }
 </style>

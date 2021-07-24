@@ -40,7 +40,7 @@ import ComponentList from "comps/ComponentList.vue";
 import Editor from "comps/editor/Index.vue";
 import { deepCopy } from "utils/utils";
 import { v4 as uuidv4 } from "uuid";
-import { computed, ref } from "vue";
+import { computed, ref,onMounted } from "vue";
 import DataList from "comps/DataList.vue";
 import AttrList from "comps/AttrList.vue";
 
@@ -90,7 +90,28 @@ export default {
 
     const activeTab = ref("style");
     const curComponent = computed(() => store.state.curComponent);
+    // onMounted(() => {
+    //   let num = 1000
+    //   while (num>0) {
+    //     console.log('num',num);
+        
+    //     const index = Math.floor( Math.random()*4)
+    //     const component = deepCopy(
+    //     componentListData[index]
+    //   );
+    //     const left = Math.random()*1000
+    //     const top = Math.random()*600
+    //     console.log(left,top);
+        
+    //     component.style.left = left;
+    //     component.style.top = top;
+    //     component.id = num;
+    //     console.log(index,component);
+    //       store.commit("addComponent", { component });
 
+    //     num--
+    //   }
+    // });
     return {
       handleDrop,
       handleDragOver,
@@ -136,7 +157,7 @@ export default {
       }
     }
   }
-  ::v-deep .el-tabs__nav-wrap {
+  ::v-deep(.el-tabs__nav-wrap) {
     padding: 0 20px;
   }
 }

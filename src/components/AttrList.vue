@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-22 00:05:40
+ * @LastEditTime: 2021-07-24 16:02:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
@@ -12,6 +12,7 @@
       v-for="item in styleList"
       :key="item.label"
       :label="item.label"
+      :unit="item.unit"
       :is="item.component"
       :value="item.value"
       :options="item.options"
@@ -21,7 +22,7 @@
 </template>
 
 <script>
-import { computed, reactive, watchEffect } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import CustomInputNumber from "./customComponent/CustomInputNumber.vue";
 import CustomInput from "./customComponent/CustomInput.vue";
@@ -39,22 +40,27 @@ export default {
       width: {
         label: "宽",
         component: "custom-input-number",
+        unit: 'px',
       },
       height: {
         label: "高",
         component: "custom-input-number",
+        unit: 'px',
       },
       left: {
         label: "x坐标",
         component: "custom-input-number",
+        unit: 'px',
       },
       top: {
         label: "y坐标",
         component: "custom-input-number",
+        unit: 'px',
       },
       rotate: {
         label: "旋转",
         component: "custom-input-number",
+        unit: '°',
       },
       color: {
         label: "字体颜色",
@@ -63,6 +69,7 @@ export default {
       fontSize: {
         label: "字体大小",
         component: "custom-input-number",
+        unit: 'px',
       },
       fontWeight: {
         label: "字体粗细",
@@ -71,10 +78,12 @@ export default {
       lineHeight: {
         label: "行高",
         component: "custom-input-number",
+        unit: 'px',
       },
       letterSpacing: {
         label: "字间距",
         component: "custom-input-number",
+        unit: 'px',
       },
       backgroundColor: {
         label: "背景颜色",
@@ -83,6 +92,7 @@ export default {
       borderWidth: {
         label: "边框宽度",
         component: "custom-input-number",
+        unit: 'px',
       },
       borderStyle: {
         label: "边框风格",
@@ -109,6 +119,7 @@ export default {
       borderRadius: {
         label: "边框半径",
         component: "custom-input-number",
+        unit: 'px',
       },
       opacity: {
         label: "透明度",
@@ -158,6 +169,7 @@ export default {
         key,
         value: store.state.curComponent.style[key],
         label: styleMap[key].label,
+        unit: styleMap[key].unit,
         component: styleMap[key].component,
         options: styleMap[key].options,
       }))
@@ -165,7 +177,6 @@ export default {
     const handleValueChange = (key, value) => {
       console.log('key',key);
       console.log('value',value);
-      
       store.commit("setCurComponentStyle", { key, value });
     };
     return {

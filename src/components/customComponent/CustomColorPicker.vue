@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-19 22:50:44
- * @LastEditTime: 2021-07-22 00:06:39
+ * @LastEditTime: 2021-07-24 15:07:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/setupComponent.vue/Input-number.vue
 -->
 <template>
   <div class="custom-input">
-    <CustomComponentItem :label="label">
+    <CustomComponentItem :label="label" :unit="unit">
       <el-color-picker v-model="value" @change="handleChange" size="small"></el-color-picker>
     </CustomComponentItem>
   </div>
@@ -22,6 +22,7 @@ export default {
   },
   props: {
     label: String,
+    unit: String,
     value: {
       require: true,
     },
