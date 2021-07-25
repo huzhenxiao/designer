@@ -7,8 +7,8 @@
     <ul @mouseup="handleMouseUp">
       <template v-if="curComponent">
         <template v-if="!curComponent.isLock">
-          <li>复制</li>
-          <li>剪切</li>
+          <li @click="copy">复制</li>
+          <li @click="cut">剪切</li>
           <li @click="deleteComponent">删除</li>
           <li @click="lock">锁定</li>
           <li @click="setTop">置顶</li>
@@ -18,7 +18,7 @@
         </template>
         <li v-else @click="unlock">解锁</li>
       </template>
-      <li v-else>粘贴</li>
+      <li v-else @click="paste">粘贴</li>
     </ul>
   </div>
 </template>
@@ -58,6 +58,16 @@ export default {
     const setDown = () => {
       store.commit("setDownComponent");
     };
+    const copy = () =>{
+      store.commit("copy");
+    }
+    const cut = () =>{
+      store.commit("cut");
+    }
+    const paste = () =>{
+      store.commit("paste",true);
+    }
+    
     return {
       menuShow,
       menuLeft,
@@ -71,6 +81,9 @@ export default {
       setBottom,
       setUp,
       setDown,
+      copy,
+      cut,
+      paste,
     };
   },
 };
