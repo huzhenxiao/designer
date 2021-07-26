@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 18:21:58
- * @LastEditTime: 2021-07-25 14:49:49
+ * @LastEditTime: 2021-07-26 00:17:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/store/index.js
@@ -11,7 +11,8 @@ import compose from "./compose";
 import contextmenu from "./contextmenu";
 import lock from "./lock";
 import layer from "./layer";
-import copy from './copy'
+import copy from "./copy";
+import snapshot from "./snapshot";
 
 const store = createStore({
   state() {
@@ -19,6 +20,7 @@ const store = createStore({
       ...compose.state,
       ...contextmenu.state,
       ...copy.state,
+      ...snapshot.state,
 
       editMode: "", // 编辑器模式 edit preview
       componentData: [], // 画布组件数据
@@ -42,7 +44,8 @@ const store = createStore({
     ...lock.mutations,
     ...layer.mutations,
     ...copy.mutations,
-    
+    ...snapshot.mutations,
+
     addComponent(state, { component, index }) {
       if (index !== undefined) {
         state.componentData.splice(index, 0, component);

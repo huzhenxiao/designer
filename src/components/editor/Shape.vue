@@ -78,8 +78,11 @@ export default {
       const startLeft = pos.left;
       const startTop = pos.top;
 
+      // 如果没有移动不保存快照，避免点击产生无效快照
+      let hasMove = false;
       const move = (moveEvent) => {
         console.log("shape mouse move");
+        hasMove = true;
         const curX = moveEvent.clientX;
         const curY = moveEvent.clientY;
         pos.left = curX - startX + startLeft;
@@ -88,6 +91,7 @@ export default {
       };
       const throttleMove = throttle(move, throttleDelay);
       const up = (e) => {
+        hasMove && store.commit("recordSnapshot");
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
       };
@@ -131,7 +135,11 @@ export default {
         y: 2 * center.y - curPoint.y,
       };
       const needLockProportion = isNeedLockProportion();
+
+      // 如果没有移动不保存快照，避免点击产生无效快照
+      let hasMove = false;
       const move = (moveEvent) => {
+        hasMove = true;
         const curPosition = {
           x: moveEvent.clientX - rect.left,
           y: moveEvent.clientY - rect.top,
@@ -152,6 +160,7 @@ export default {
       };
       const throttleMove = throttle(move, throttleDelay);
       const up = () => {
+        hasMove && store.commit("recordSnapshot");
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
       };
@@ -178,7 +187,10 @@ export default {
       const rotateDegBefore =
         (Math.atan2(startY - centerY, startX - centerX) * 180) / Math.PI;
 
+      // 如果没有移动不保存快照，避免点击产生无效快照
+      let hasMove = false;
       const move = (moveEvent) => {
+        hasMove = true;
         const curY = moveEvent.clientY;
         const curX = moveEvent.clientX;
         const rotateDegAfter =
@@ -189,6 +201,7 @@ export default {
       };
       const throttleMove = throttle(move, throttleDelay);
       const up = () => {
+        hasMove && store.commit("recordSnapshot");
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
         getCursor(curComponent.value);

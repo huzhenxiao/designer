@@ -45,29 +45,36 @@ export default {
     };
     const deleteComponent = (e) => {
       store.commit("deleteComponent");
+      store.commit("recordSnapshot");
     };
     const setTop = () => {
       store.commit("setTopComponent");
+      store.commit("recordSnapshot");
     };
     const setBottom = () => {
       store.commit("setBottomComponent");
+      store.commit("recordSnapshot");
     };
     const setUp = () => {
       store.commit("setUpComponent");
+      store.commit("recordSnapshot");
     };
     const setDown = () => {
       store.commit("setDownComponent");
+      store.commit("recordSnapshot");
     };
-    const copy = () =>{
+    const copy = () => {
       store.commit("copy");
-    }
-    const cut = () =>{
+    };
+    const cut = () => {
       store.commit("cut");
-    }
-    const paste = () =>{
-      store.commit("paste",true);
-    }
-    
+      store.commit("recordSnapshot");
+    };
+    const paste = () => {
+      store.commit("paste", true);
+      store.commit("recordSnapshot");
+    };
+
     return {
       menuShow,
       menuLeft,

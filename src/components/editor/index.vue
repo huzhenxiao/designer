@@ -198,8 +198,8 @@ export default {
       e.stopPropagation();
       e.preventDefault();
       const rectInfo = editor.value.getBoundingClientRect();
-      const left = e.clientX - rectInfo.x;
-      const top = e.clientY - rectInfo.y;
+      const left = e.clientX - rectInfo.x + 1; // +1防止误触发ContextMenu上的mouseup事件
+      const top = e.clientY - rectInfo.y + 1;
       store.commit("showContextMenu", { left, top });
     };
 

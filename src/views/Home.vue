@@ -76,6 +76,7 @@ export default {
       component.style.top = e.offsetY;
       component.id = uuidv4();
       store.commit("addComponent", { component });
+      store.commit("recordSnapshot");
     };
     const handleDragOver = (e) => {
       e.preventDefault();
@@ -100,7 +101,7 @@ export default {
     const activeTab = ref("style");
     const curComponent = computed(() => store.state.curComponent);
     // onMounted(() => {
-    //   let num = 1000
+    //   let num = 2000
     //   while (num>0) {
     //     console.log('num',num);
 

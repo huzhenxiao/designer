@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-30 21:20:32
- * @LastEditTime: 2021-07-25 02:38:43
+ * @LastEditTime: 2021-07-26 00:37:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/Toolbar.vue
 -->
 <template>
   <div class="toolbar">
-    <el-button size="medium">撤消</el-button>
-    <!-- <el-button @click="redo">重做</el-button> -->
+    <el-button @click="undo" size="medium">撤消</el-button>
+    <el-button @click="redo" size="medium">重做</el-button>
     <!-- <label for="input" class="insert">插入图片</label> -->
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
     <el-button @click="preview" size="medium">预览</el-button>
@@ -117,12 +117,21 @@ export default {
     const componentData = computed(() => store.state.componentData);
     const canvasStyleData = computed(() => store.state.canvasStyleData);
 
+    const undo = () => {
+      store.commit("undo");
+    };
+
+    const redo = () => {
+      store.commit("redo");
+    };
+
     const lock = () => {
       store.commit("lock");
     };
 
     const clearCanvas = () => {
       store.commit("setComponentData", []);
+      store.commit("recordSnapshot");
     };
 
     const setTop = () => {
@@ -202,6 +211,8 @@ export default {
       canvasStyleData,
       handleCanvasStyleChange,
       handleScaleChange,
+      undo,
+      redo,
       lock,
       unlock,
       clearCanvas,
