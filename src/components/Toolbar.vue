@@ -1,15 +1,22 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-30 21:20:32
- * @LastEditTime: 2021-07-28 22:42:47
+ * @LastEditTime: 2021-07-28 22:56:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/Toolbar.vue
 -->
 <template>
   <div class="toolbar">
-    <el-button @click="undo" size="medium">撤消</el-button>
-    <el-button @click="redo" size="medium">重做</el-button>
+    <el-button @click="undo" :disabled="snapshotIndex === -1" size="medium"
+      >撤消</el-button
+    >
+    <el-button
+      @click="redo"
+      :disabled="snapshotIndex === snapshotData.length - 1"
+      size="medium"
+      >重做</el-button
+    >
     <!-- <label for="input" class="insert">插入图片</label> -->
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
     <el-button @click="preview" size="medium">预览</el-button>
@@ -17,9 +24,22 @@
     <el-button @click="clearCanvas" size="medium">清空画布</el-button>
     <el-button @click="setTop" size="medium">置顶</el-button>
     <el-button @click="setBottom" size="medium">置底</el-button>
-    <el-button @click="compose" :disabled="!areaData.components.length">组合</el-button>
-    <el-button @click="decompose" 
-    :disabled="!curComponent || curComponent.isLock || curComponent.component !== 'Group'">拆分</el-button>
+    <el-button
+      @click="compose"
+      :disabled="!areaData.components.length"
+      size="medium"
+      >组合</el-button
+    >
+    <el-button
+      @click="decompose"
+      :disabled="
+        !curComponent ||
+        curComponent.isLock ||
+        curComponent.component !== 'Group'
+      "
+      size="medium"
+      >拆分</el-button
+    >
 
     <el-button
       @click="lock"
@@ -117,6 +137,8 @@ export default {
     const componentData = computed(() => store.state.componentData);
     const canvasStyleData = computed(() => store.state.canvasStyleData);
     const areaData = computed(() => store.state.areaData);
+    const snapshotData = computed(() => store.state.snapshotData);
+    const snapshotIndex = computed(() => store.state.snapshotIndex);
 
     const undo = () => {
       store.commit("undo");
@@ -145,10 +167,12 @@ export default {
 
     const compose = () => {
       store.commit("compose");
+      store.commit("recordSnapshot");
     };
 
     const decompose = () => {
       store.commit("decompose");
+      store.commit("recordSnapshot");
     };
 
     const unlock = () => {
@@ -163,8 +187,8 @@ export default {
       sessionStorage.setItem(
         "canvasData",
         JSON.stringify({
-          componentData:componentData.value,
-          canvasStyleData:canvasStyleData.value,
+          componentData: componentData.value,
+          canvasStyleData: canvasStyleData.value,
         })
       );
       window.open(routeUrl.href, "_blank");
@@ -174,8 +198,8 @@ export default {
       sessionStorage.setItem(
         "canvasData",
         JSON.stringify({
-          componentData:componentData.value,
-          canvasStyleData:canvasStyleData.value,
+          componentData: componentData.value,
+          canvasStyleData: canvasStyleData.value,
         })
       );
     };
@@ -212,7 +236,10 @@ export default {
         });
       });
       store.commit("setComponentData", newComponentData);
-      store.commit("setCanvasStyleDataByKey", { key: "scale", value: newScale });
+      store.commit("setCanvasStyleDataByKey", {
+        key: "scale",
+        value: newScale,
+      });
     };
 
     return {
@@ -233,6 +260,8 @@ export default {
       preview,
       save,
       scaleOptions,
+      snapshotData,
+      snapshotIndex,
     };
   },
 };
