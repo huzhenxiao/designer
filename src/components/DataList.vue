@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-25 01:37:14
+ * @LastEditTime: 2021-07-27 23:50:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
@@ -48,14 +48,16 @@ export default {
         component: dataMap[key].component,
         options: dataMap[key].options,
       }));
-      result.unshift({
-        key: "propValue",
-        value: store.state.curComponent.propValue,
-        label: dataMap["propValue"].label,
-        unit: dataMap["propValue"].unit,
-        component: dataMap["propValue"].component,
-        options: dataMap["propValue"].options,
-      });
+      if(curComponent.value.component !== 'Group'){
+        result.unshift({
+          key: "propValue",
+          value: store.state.curComponent.propValue,
+          label: dataMap["propValue"].label,
+          unit: dataMap["propValue"].unit,
+          component: dataMap["propValue"].component,
+          options: dataMap["propValue"].options,
+        });
+      }
       return result;
     });
     const handleValueChange = (key, value) => {

@@ -1,9 +1,21 @@
+/*
+ * @Author: your name
+ * @Date: 2021-07-01 23:29:28
+ * @LastEditTime: 2021-07-27 22:40:36
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /my-designer/src/utils/translate.js
+ */
 export function changeStyleWithScale(value, scale) {
   return (value * parseInt(scale)) / 100;
 }
 
 export function mod360(deg) {
   return (deg + 360) % 360;
+}
+
+export function toPercent(value) {
+  return value * 100 + "%";
 }
 
 /**
@@ -52,10 +64,10 @@ export function calculateRotatedPointCoordinate(point, center, rotate) {
   };
 }
 
-export function cos(rotate){
+export function cos(rotate) {
   return Math.cos(angleToRadian(rotate));
 }
 
-export function sin(rotate){
+export function sin(rotate) {
   return Math.sin(angleToRadian(rotate));
 }

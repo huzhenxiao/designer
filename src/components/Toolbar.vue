@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-06-30 21:20:32
- * @LastEditTime: 2021-07-26 00:37:27
+ * @LastEditTime: 2021-07-28 22:42:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /my-designer/src/components/Toolbar.vue
@@ -17,9 +17,9 @@
     <el-button @click="clearCanvas" size="medium">清空画布</el-button>
     <el-button @click="setTop" size="medium">置顶</el-button>
     <el-button @click="setBottom" size="medium">置底</el-button>
-    <!-- <el-button @click="compose" :disabled="!areaData.components.length">组合</el-button> -->
-    <!-- <el-button @click="decompose" 
-    :disabled="!curComponent || curComponent.isLock || curComponent.component != 'Group'">拆分</el-button> -->
+    <el-button @click="compose" :disabled="!areaData.components.length">组合</el-button>
+    <el-button @click="decompose" 
+    :disabled="!curComponent || curComponent.isLock || curComponent.component !== 'Group'">拆分</el-button>
 
     <el-button
       @click="lock"
@@ -116,6 +116,7 @@ export default {
     const curComponent = computed(() => store.state.curComponent);
     const componentData = computed(() => store.state.componentData);
     const canvasStyleData = computed(() => store.state.canvasStyleData);
+    const areaData = computed(() => store.state.areaData);
 
     const undo = () => {
       store.commit("undo");
@@ -140,6 +141,14 @@ export default {
 
     const setBottom = () => {
       store.commit("setBottomComponent");
+    };
+
+    const compose = () => {
+      store.commit("compose");
+    };
+
+    const decompose = () => {
+      store.commit("decompose");
     };
 
     const unlock = () => {
@@ -209,6 +218,7 @@ export default {
     return {
       curComponent,
       canvasStyleData,
+      areaData,
       handleCanvasStyleChange,
       handleScaleChange,
       undo,
@@ -218,6 +228,8 @@ export default {
       clearCanvas,
       setTop,
       setBottom,
+      compose,
+      decompose,
       preview,
       save,
       scaleOptions,

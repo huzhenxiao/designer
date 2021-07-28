@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-30 17:38:26
- * @LastEditTime: 2021-07-24 21:53:23
+ * @LastEditTime: 2021-07-28 01:04:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /designer/my-designer/src/main.js
@@ -55,6 +55,7 @@ const customComponentsMap = {
   "v-button": "VButton",
   pic: "Picture",
   "rect-shape": "RectShape",
+  "Group": "Group",
 };
 Object.keys(customComponentsMap).forEach((key) => {
   app.component(
@@ -66,3 +67,4 @@ Object.keys(customComponentsMap).forEach((key) => {
 });
 
 app.use(router).use(store).mount("#app");
+

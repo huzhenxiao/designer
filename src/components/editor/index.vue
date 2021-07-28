@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, reactive } from "vue";
+import { ref, computed, onMounted, reactive, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
 import { changeStyleWithScale } from "utils/translate";
 import { getStyleExclude, getComponentRotatedStyle } from "utils/style";
@@ -61,6 +61,8 @@ import Shape from "./Shape.vue";
 import Area from "./Area.vue";
 import ContextMenu from "./ContextMenu.vue";
 import { useGetStyle, useGetArea } from "./index";
+import { $ } from "utils/utils";
+import emitter from "utils/eventBus";
 
 export default {
   components: {
@@ -145,8 +147,20 @@ export default {
         right = -Infinity,
         bottom = -Infinity;
       areaData.forEach((component) => {
-        let style;
+        let style = {};
         if (component.component === "Group") {
+          component.propValue.forEach((item) => {
+            const rectInfo = $(`#component${item.id}`).getBoundingClientRect();
+            style.left = rectInfo.left - editorX;
+            style.top = rectInfo.top - editorY;
+            style.right = rectInfo.right - editorX;
+            style.bottom = rectInfo.bottom - editorY;
+
+            if (style.left < left) left = style.left;
+            if (style.top < top) top = style.top;
+            if (style.right > right) right = style.right;
+            if (style.bottom > bottom) bottom = style.bottom;
+          });
         } else {
           style = getComponentRotatedStyle(component.style);
         }
@@ -210,7 +224,12 @@ export default {
 
     onMounted(() => {
       store.commit("getEditor");
+      emitter.on("hideArea", hideArea);
     });
+    onBeforeUnmount(() => {
+      emitter.off("hideArea", hideArea);
+    });
+
     return {
       isEdit,
       componentData,
