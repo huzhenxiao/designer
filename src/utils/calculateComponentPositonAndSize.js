@@ -1,7 +1,4 @@
-import {
-  getCenterPoint,
-  calculateRotatedPointCoordinate,
-} from "./translate";
+import { getCenterPoint, calculateRotatedPointCoordinate } from "./translate";
 
 // 根据左上点和对称点计算出中心点，根据中心点和旋转角逆向计算出旋转前的左上和对称点坐标，其他3个角同理
 function calculateLeftTop(
@@ -25,7 +22,37 @@ function calculateLeftTop(
   );
   let newWidth = newBottomRightPoint.x - newTopLeftPoint.x;
   let newHeight = newBottomRightPoint.y - newTopLeftPoint.y;
+
   if (needLockProportion) {
+    if (newWidth / newHeight > proportion) {
+      newTopLeftPoint.x += Math.abs(newWidth - newHeight * proportion);
+      newWidth = newHeight * proportion;
+    } else {
+      newTopLeftPoint.y += Math.abs(newHeight - newWidth / proportion);
+      newHeight = newWidth / proportion;
+    }
+
+    // 由于现在求的未旋转前的坐标是以没按比例缩减宽高前的坐标来计算的
+    // 所以缩减宽高后，需要按照原来的中心点旋转回去，获得缩减宽高并旋转后对应的坐标
+    // 然后以这个坐标和对称点获得新的中心点，并重新计算未旋转前的坐标
+    const rotatedTopLeftPoint = calculateRotatedPointCoordinate(
+      newTopLeftPoint,
+      newCenterPoint,
+      style.rotate
+    );
+    newCenterPoint = getCenterPoint(rotatedTopLeftPoint, symmetricPoint);
+    newTopLeftPoint = calculateRotatedPointCoordinate(
+      rotatedTopLeftPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newBottomRightPoint = calculateRotatedPointCoordinate(
+      symmetricPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newWidth = newBottomRightPoint.x - newTopLeftPoint.x;
+    newHeight = newBottomRightPoint.y - newTopLeftPoint.y;
   }
   if (newWidth > 0 && newHeight > 0) {
     style.width = Math.round(newWidth);
@@ -57,6 +84,31 @@ function calculateRightTop(
   let newWidth = newTopRightPoint.x - newBottomLeftPoint.x;
   let newHeight = newBottomLeftPoint.y - newTopRightPoint.y;
   if (needLockProportion) {
+    if (newWidth / newHeight > proportion) {
+      newTopRightPoint.x -= Math.abs(newWidth - newHeight * proportion);
+      newWidth = newHeight * proportion;
+    } else {
+      newTopRightPoint.y += Math.abs(newHeight - newWidth / proportion);
+      newHeight = newWidth / proportion;
+    }
+    const rotatedTopRightPoint = calculateRotatedPointCoordinate(
+      newTopRightPoint,
+      newCenterPoint,
+      style.rotate
+    );
+    newCenterPoint = getCenterPoint(rotatedTopRightPoint, symmetricPoint);
+    newTopRightPoint = calculateRotatedPointCoordinate(
+      rotatedTopRightPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newBottomLeftPoint = calculateRotatedPointCoordinate(
+      symmetricPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newWidth = newTopRightPoint.x - newBottomLeftPoint.x;
+    newHeight = newBottomLeftPoint.y - newTopRightPoint.y;
   }
   if (newWidth > 0 && newHeight > 0) {
     style.width = Math.round(newWidth);
@@ -89,6 +141,31 @@ function calculateRightBottom(
   let newWidth = newBottomRightPoint.x - newTopLeftPoint.x;
   let newHeight = newBottomRightPoint.y - newTopLeftPoint.y;
   if (needLockProportion) {
+    if (newWidth / newHeight > proportion) {
+      newBottomRightPoint.x -= Math.abs(newWidth - newHeight * proportion);
+      newWidth = newHeight * proportion;
+    } else {
+      newBottomRightPoint.y -= Math.abs(newHeight - newWidth / proportion);
+      newHeight = newWidth / proportion;
+    }
+    const rotatedBottomRightPoint = calculateRotatedPointCoordinate(
+      newBottomRightPoint,
+      newCenterPoint,
+      style.rotate
+    );
+    newCenterPoint = getCenterPoint(rotatedBottomRightPoint, symmetricPoint);
+    newBottomRightPoint = calculateRotatedPointCoordinate(
+      rotatedBottomRightPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newTopLeftPoint = calculateRotatedPointCoordinate(
+      symmetricPoint,
+      newCenterPoint,
+      -style.rotate
+    );
+    newWidth = newBottomRightPoint.x - newTopLeftPoint.x;
+    newHeight = newBottomRightPoint.y - newTopLeftPoint.y;
   }
   if (newWidth > 0 && newHeight > 0) {
     style.width = Math.round(newWidth);
@@ -120,6 +197,19 @@ function calculateLeftBottom(
   let newWidth = newTopRightPoint.x - newBottomLeftPoint.x;
   let newHeight = newBottomLeftPoint.y - newTopRightPoint.y;
   if (needLockProportion) {
+    if(newWidth/newHeight > proportion){
+      newBottomLeftPoint.x += Math.abs(newWidth - newHeight*proportion)
+      newWidth = newHeight*proportion
+    }else{
+      newBottomLeftPoint.y -= Math.abs(newHeight - newWidth/proportion)
+      newHeight = newWidth/proportion
+    }
+    const rotatedBottomLeftPoint = calculateRotatedPointCoordinate(newBottomLeftPoint,newCenterPoint,style.rotate)
+    newCenterPoint = getCenterPoint(rotatedBottomLeftPoint,symmetricPoint)
+    newBottomLeftPoint = calculateRotatedPointCoordinate(rotatedBottomLeftPoint,newCenterPoint,-style.rotate)
+    newTopRightPoint = calculateRotatedPointCoordinate(symmetricPoint,newCenterPoint,-style.rotate)
+    newWidth = newTopRightPoint.x - newBottomLeftPoint.x
+    newHeight = newBottomLeftPoint.y - newTopRightPoint.y
   }
   if (newWidth > 0 && newHeight > 0) {
     style.width = Math.round(newWidth);
@@ -162,6 +252,7 @@ function calculateTop(
       y: (rotatedTopMiddlePoint.y + symmetricPoint.y) / 2,
     };
     let width = style.width;
+    // 因为调整的是高度，所以需要根据锁定的比例调整宽度
     if (needLockProportion) {
       width = newHeight * proportion;
     }
@@ -205,8 +296,9 @@ function calculateRight(
       y: (rotatedRightMiddlePoint.y + symmetricPoint.y) / 2,
     };
     let height = style.height;
+    // 因为调整的是宽度，所以需要根据锁定的比例调整高度
     if (needLockProportion) {
-      height = newWidth * proportion;
+      height = newWidth / proportion;
     }
 
     style.height = height;
@@ -248,6 +340,7 @@ function calculateBottom(
       y: (rotatedBottomMiddlePoint.y + symmetricPoint.y) / 2,
     };
     let width = style.width;
+    // 因为调整的是高度 所以需要根据锁定的比例调整宽度
     if (needLockProportion) {
       width = newHeight * proportion;
     }
@@ -291,8 +384,9 @@ function calculateLeft(
       y: (rotatedRightMiddlePoint.y + symmetricPoint.y) / 2,
     };
     let height = style.height;
+    // 因为调整的是宽度 所以需要根据锁定的比例调整高度
     if (needLockProportion) {
-      height = newWidth * proportion;
+      height = newWidth / proportion;
     }
 
     style.height = height;

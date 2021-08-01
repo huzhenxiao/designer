@@ -101,9 +101,9 @@ export default {
 
     const isNeedLockProportion = () => {
       if (props.element.component !== "Group") return false;
-      const ratates = [0, 90, 180, 360];
+      const rotates = [0, 180, 360];
       for (const component of props.element.propValue) {
-        if (!ratates.includes(mod360(parseInt(component.style.rotate)))) {
+        if (!rotates.includes(mod360(parseInt(component.style.rotate)))) {
           return true;
         }
       }
