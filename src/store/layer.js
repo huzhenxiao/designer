@@ -10,12 +10,14 @@ export const useLayerStore = defineStore({
   actions: {
     setTopComponent() {
       const { componentData, curComponentIndex } = useMainStore();
+      if (curComponentIndex === -1) return;
       if (curComponentIndex === componentData.length - 1) return;
       swap(componentData, curComponentIndex, componentData.length - 1);
       useMainStore().curComponentIndex = componentData.length - 1;
     },
     setBottomComponent() {
       const { componentData, curComponentIndex } = useMainStore();
+      if (curComponentIndex === -1) return;
       if (curComponentIndex === 0) return;
       swap(componentData, curComponentIndex, 0);
       useMainStore().curComponentIndex = 0;
@@ -31,6 +33,6 @@ export const useLayerStore = defineStore({
       if (curComponentIndex === 0) return;
       swap(componentData, curComponentIndex, curComponentIndex - 1);
       useMainStore().curComponentIndex = curComponentIndex - 1;
-    }
-  }
+    },
+  },
 });

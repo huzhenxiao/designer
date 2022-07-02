@@ -12,11 +12,15 @@
     <!-- <label for="input" class="insert">插入图片</label> -->
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
     <el-button @click="clearCanvas" size="small">清空画布</el-button>
-    <el-button @click="setTop" size="small">置顶</el-button>
-    <el-button @click="setBottom" size="small">置底</el-button>
+    <el-button @click="setTop" :disabled="!curComponent" size="small"
+      >置顶</el-button
+    >
+    <el-button @click="setBottom" :disabled="!curComponent" size="small"
+      >置底</el-button
+    >
     <el-button
       @click="compose"
-      :disabled="areaData.components.length<2"
+      :disabled="areaData.components.length < 2"
       size="small"
       >组合</el-button
     >
@@ -24,8 +28,8 @@
       @click="decompose"
       :disabled="
         !curComponent ||
-          curComponent.isLock ||
-          curComponent.component !== 'group'
+        curComponent.isLock ||
+        curComponent.component !== 'group'
       "
       size="small"
       >拆分</el-button
@@ -95,7 +99,7 @@ import {
   useComposeStore,
   useSnapshotStore,
   useLockStore,
-  useLayerStore
+  useLayerStore,
 } from "@/store";
 import { deepClone } from "utils/utils";
 export default {
@@ -103,32 +107,32 @@ export default {
     const scaleOptions = [
       {
         label: "50%",
-        value: 50
+        value: 50,
       },
       {
         label: "75%",
-        value: 75
+        value: 75,
       },
       {
         label: "100%",
-        value: 100
+        value: 100,
       },
       {
         label: "125%",
-        value: 125
+        value: 125,
       },
       {
         label: "150%",
-        value: 150
+        value: 150,
       },
       {
         label: "200%",
-        value: 200
+        value: 200,
       },
       {
         label: "300%",
-        value: 300
-      }
+        value: 300,
+      },
     ];
     const mainStore = useMainStore();
     const composeStore = useComposeStore();
@@ -161,10 +165,12 @@ export default {
     };
 
     const setTop = () => {
+      console.log(curComponent);
       layerStore.setTopComponent();
     };
 
     const setBottom = () => {
+      console.log(curComponent);
       layerStore.setBottomComponent();
     };
 
@@ -185,13 +191,13 @@ export default {
     const preview = () => {
       mainStore.setEditMode("preview");
       const routeUrl = router.resolve({
-        path: "/preview"
+        path: "/preview",
       });
       sessionStorage.setItem(
         "canvasData",
         JSON.stringify({
           componentData: componentData.value,
-          canvasStyleData: canvasStyleData.value
+          canvasStyleData: canvasStyleData.value,
         })
       );
       window.open(routeUrl.href, "_blank");
@@ -202,7 +208,7 @@ export default {
         "canvasData",
         JSON.stringify({
           componentData: componentData.value,
-          canvasStyleData: canvasStyleData.value
+          canvasStyleData: canvasStyleData.value,
         })
       );
     };
@@ -219,17 +225,17 @@ export default {
       "fontSize",
       "borderWidth",
       "lineHeight",
-      "borderRadius"
+      "borderRadius",
     ];
     const getScaleValue = (oldValue, newScale) =>
       ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) *
         parseInt(newScale)) /
       100;
-    const handleScaleChange = newScale => {
+    const handleScaleChange = (newScale) => {
       newScale = newScale || canvasStyleData.value.scale;
       const newComponentData = deepClone(componentData.value);
-      newComponentData.forEach(component => {
-        Object.keys(component.style).forEach(key => {
+      newComponentData.forEach((component) => {
+        Object.keys(component.style).forEach((key) => {
           if (needToChangeStyle.includes(key)) {
             component.style[key].value = getScaleValue(
               component.style[key].value,
@@ -241,7 +247,7 @@ export default {
       mainStore.setComponentData(newComponentData);
       mainStore.setCanvasStyleDataByKey({
         key: "scale",
-        value: newScale
+        value: newScale,
       });
     };
 
@@ -264,9 +270,9 @@ export default {
       save,
       scaleOptions,
       snapshotData,
-      snapshotIndex
+      snapshotIndex,
     };
-  }
+  },
 };
 </script>
 

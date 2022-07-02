@@ -10,7 +10,7 @@ export const useMainStore = defineStore({
       // 如果没点中组件，并且在画布空白处弹起鼠标，则取消当前组件的选中状态
       isClickComponent: false,
       curComponent: null,
-      curComponentIndex: null,
+      curComponentIndex: -1,
       canvasStyleData: {
         // 页面全局数据
         width: 1200,
