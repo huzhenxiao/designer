@@ -1,11 +1,3 @@
-<!--
- * @Author: your name
- * @Date: 2021-07-24 16:17:28
- * @LastEditTime: 2021-07-25 02:25:04
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /my-designer/src/views/Preview.vue
--->
 <template>
   <div
     class="preview"
@@ -29,8 +21,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { reactive,computed,onUnmounted} from "vue";
+import { batchGetPointStat } from "@/apis";
 import { changeStyleWithScale } from "utils/translate";
 import ComponentWrapper from "comps/ComponentWrapper.vue";
 
@@ -40,10 +32,38 @@ export default {
     ComponentWrapper,
   },
   setup() {
-    const store = useStore();
     const canvasData = JSON.parse(sessionStorage.getItem("canvasData"));
-    const componentData = canvasData.componentData;
-    const canvasStyleData = canvasData.canvasStyleData;
+    const componentData = reactive(canvasData.componentData);
+    const canvasStyleData = reactive(canvasData.canvasStyleData);
+    const codeList = [];
+    componentData.forEach(component => {
+      if(component.businessData.IoTdataSource?.value){
+        codeList.push(component.businessData.IoTdataSource.value)
+      }
+    });
+    function getRealInfo() {
+      batchGetPointStat(codeList).then(res=>{
+        if(res?.result){
+          const realInfoMap = res.result.reduce((memo,item)=>{
+            memo[item.code] = item;
+            return memo
+          },{});
+          componentData.forEach(component => {
+            if(component.businessData.IoTdataSource?.value){
+              component.businessData.IoTdataSource.realInfo = realInfoMap[component.businessData.IoTdataSource.value];
+            }
+          });
+        }
+      })
+    }
+    getRealInfo();
+    let timer = setInterval(() => {
+      getRealInfo()
+    }, 5000);
+    onUnmounted(() => {
+      clearInterval(timer);
+      timer = null;
+    })
 
     return {
       changeStyleWithScale,

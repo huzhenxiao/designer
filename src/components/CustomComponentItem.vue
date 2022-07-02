@@ -1,13 +1,5 @@
-<!--
- * @Author: your name
- * @Date: 2021-07-19 21:48:46
- * @LastEditTime: 2021-07-24 15:58:17
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /designer/my-designer/src/components/SetupItem.vue
--->
 <template>
-  <div class="custom-component-item">
+  <div class="meta-component-item">
     <span v-if="label" class="label">
       {{ label }}
     </span>
@@ -33,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.custom-component-item {
+.meta-component-item {
   width: 100%;
   display: flex;
   margin-bottom: 20px;
@@ -44,7 +36,7 @@ export default {
     font-size: 14px;
     color: #666;
     padding: 0 10px;
-    flex: 0 0 60px;
+    flex: 0 0 70px;
   }
   .content {
     flex: 1 1 calc(100% - 90px);

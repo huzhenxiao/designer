@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-07-01 22:55:54
- * @LastEditTime: 2021-07-25 00:14:42
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /my-designer/src/utils/utils.js
- */
 export function deepClone(target) {
   if (typeof target == "object") {
     const result = Array.isArray(target) ? [] : {};

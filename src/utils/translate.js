@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-07-01 23:29:28
- * @LastEditTime: 2021-07-27 22:40:36
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /my-designer/src/utils/translate.js
- */
 export function changeStyleWithScale(value, scale) {
   return (value * parseInt(scale)) / 100;
 }
@@ -40,7 +32,6 @@ export function getCenterPoint(p1, p2) {
  * @param {Object} center 旋转中心
  * @param {Number} rotate 旋转角度
  * @return {Object} 旋转后的坐标
- * https://www.zhihu.com/question/67425734/answer/252724399 旋转矩阵公式
  */
 export function calculateRotatedPointCoordinate(point, center, rotate) {
   /**

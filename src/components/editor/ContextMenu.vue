@@ -24,55 +24,65 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import {
+  useMainStore,
+  useContextmenuStore,
+  useCopyStore,
+  useLockStore,
+  useSnapshotStore,
+  useLayerStore
+} from "@/store";
 export default {
   setup() {
-    const store = useStore();
-    const menuShow = computed(() => store.state.menuShow);
-    const menuLeft = computed(() => store.state.menuLeft);
-    const menuTop = computed(() => store.state.menuTop);
-    const curComponent = computed(() => store.state.curComponent);
+    const mainStore = useMainStore();
+    const copyStore = useCopyStore();
+    const lockStore = useLockStore();
+    const snapshotStore = useSnapshotStore();
+    const layerStore = useLayerStore();
+    const { curComponent } = storeToRefs(mainStore);
+    const { menuShow, menuLeft, menuTop } = storeToRefs(useContextmenuStore());
 
-    const handleMouseUp = (e) => {
-      store.commit("setClickComponentStatus", true);
+    const handleMouseUp = e => {
+      mainStore.setClickComponentStatus(true);
     };
-    const lock = (e) => {
-      store.commit("lock");
+    const lock = e => {
+      lockStore.lock();
     };
-    const unlock = (e) => {
-      store.commit("unlock");
+    const unlock = e => {
+      lockStore.unlock();
     };
-    const deleteComponent = (e) => {
-      store.commit("deleteComponent");
-      store.commit("recordSnapshot");
+    const deleteComponent = e => {
+      mainStore.deleteComponent();
+      snapshotStore.recordSnapshot();
     };
     const setTop = () => {
-      store.commit("setTopComponent");
-      store.commit("recordSnapshot");
+      layerStore.setTopComponent();
+      snapshotStore.recordSnapshot();
     };
     const setBottom = () => {
-      store.commit("setBottomComponent");
-      store.commit("recordSnapshot");
+      layerStore.setBottomComponent();
+      snapshotStore.recordSnapshot();
     };
     const setUp = () => {
-      store.commit("setUpComponent");
-      store.commit("recordSnapshot");
+      layerStore.setUpComponent();
+      snapshotStore.recordSnapshot();
     };
     const setDown = () => {
-      store.commit("setDownComponent");
-      store.commit("recordSnapshot");
+      layerStore.setDownComponent();
+      snapshotStore.recordSnapshot();
     };
     const copy = () => {
-      store.commit("copy");
+      copyStore.copy();
     };
     const cut = () => {
-      store.commit("cut");
-      store.commit("recordSnapshot");
+      copyStore.cut();
+      snapshotStore.recordSnapshot();
     };
     const paste = () => {
-      store.commit("paste", true);
-      store.commit("recordSnapshot");
+      copyStore.paste(true);
+      snapshotStore.recordSnapshot();
     };
 
     return {
@@ -90,9 +100,9 @@ export default {
       setDown,
       copy,
       cut,
-      paste,
+      paste
     };
-  },
+  }
 };
 </script>
 

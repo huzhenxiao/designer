@@ -6,11 +6,11 @@
     @click="selectCurComponent"
     @mousedown="handleMouseDownOnShape"
   >
-    <i
+    <el-icon
       class="el-icon-refresh-right"
       v-show="isActive"
       @mousedown="handleRotate"
-    ></i>
+    ><refresh-right /></el-icon>
     <i class="el-icon-lock" v-show="element.isLock && active"></i>
     <span
       class="shape-point"
@@ -24,12 +24,15 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
 import { ref, computed } from "vue";
-import { useGetPointStyle } from "./shape";
+import { useGetPointStyle } from "./useShape";
 import { throttle } from "utils/utils";
 import { mod360 } from "utils/translate";
 import calculateComponentPositonAndSize from "utils/calculateComponentPositonAndSize";
+import emitter from "utils/eventBus";
+
+import { storeToRefs } from "pinia";
+import { useMainStore,useComposeStore,useSnapshotStore } from "@/store";
 
 export default {
   props: {
@@ -51,11 +54,13 @@ export default {
     },
   },
   setup(props, context) {
-    const store = useStore();
+    const mainStore = useMainStore();
+    const composeStore = useComposeStore();
+    const snapshotStore = useSnapshotStore();
+    const { curComponent,throttleDelay } = storeToRefs(mainStore);
+    const { editor } = storeToRefs(composeStore);
+    
     const isActive = computed(() => props.active && !props.element.isLock);
-    const curComponent = computed(() => store.state.curComponent);
-    const editor = computed(() => store.state.editor);
-    const throttleDelay = computed(() => store.state.throttleDelay).value;
     const shapeDom = ref(null);
     const { pointList, getCursor, getPointStyle } = useGetPointStyle();
 
@@ -64,46 +69,59 @@ export default {
     const handleMouseDownOnShape = (e) => {
       console.log("handleMouseDownOnShape");
       e.stopPropagation();
-      store.commit("setClickComponentStatus", true);
-      store.commit("setCurComponent", {
+      mainStore.setClickComponentStatus(true);
+      mainStore.setCurComponent({
         component: props.element,
         index: props.index,
       });
       if (props.element.isLock) return;
-
       getCursor(curComponent.value); // 根据旋转角度获取光标位置
       const pos = { ...props.defaultStyle };
       const startX = e.clientX;
       const startY = e.clientY;
-      const startLeft = pos.left;
-      const startTop = pos.top;
+      const startLeft = pos.left.value;
+      const startTop = pos.top.value;
 
       // 如果没有移动不保存快照，避免点击产生无效快照
       let hasMove = false;
+      let disX = 0;
+      let disY = 0;
       const move = (moveEvent) => {
         console.log("shape mouse move");
+        
         hasMove = true;
         const curX = moveEvent.clientX;
         const curY = moveEvent.clientY;
-        pos.left = curX - startX + startLeft;
-        pos.top = curY - startY + startTop;
-        store.commit("setShapeStyle", pos);
+        disX = curX - startX;
+        disY = curY - startY;
+        let shapeDom = e.target;
+        while (shapeDom.parentElement && !shapeDom.classList.contains('shape')) {
+          shapeDom = shapeDom.parentElement;
+        }
+        const rotate = pos.rotate.value
+        shapeDom.style.transform = `translateX(${disX}px) translateY(${disY}px) rotate(${rotate}deg)`
+        
       };
-      const throttleMove = throttle(move, throttleDelay);
+      const throttleMove = throttle(move, throttleDelay.value);
       const up = (e) => {
-        hasMove && store.commit("recordSnapshot");
+        pos.left.value = disX + startLeft;
+        pos.top.value = disY + startTop;
+        mainStore.setShapeStyle(pos);
+        hasMove && snapshotStore.recordSnapshot();
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
+        emitter.off("shapeMouseup", up);
       };
+      emitter.on("shapeMouseup", up);
       document.addEventListener("mouseup", up);
       document.addEventListener("mousemove", throttleMove);
     };
 
     const isNeedLockProportion = () => {
       if (props.element.component !== "Group") return false;
-      const rotates = [0, 180, 360];
+      const ratates = [0, 90, 180, 360];
       for (const component of props.element.propValue) {
-        if (!rotates.includes(mod360(parseInt(component.style.rotate)))) {
+        if (!ratates.includes(mod360(parseInt(component.style.rotate)))) {
           return true;
         }
       }
@@ -116,12 +134,12 @@ export default {
       e.preventDefault();
       const style = { ...props.defaultStyle };
       // 宽高比
-      const proportion = style.width / style.height;
+      const proportion = style.width.value / style.height.value;
 
       // 初始中心点
       const center = {
-        x: style.left + style.width / 2,
-        y: style.top + style.height / 2,
+        x: style.left.value + style.width.value / 2,
+        y: style.top.value + style.height.value / 2,
       };
       const rect = editor.value.getBoundingClientRect();
       // 当前点击坐标
@@ -156,11 +174,11 @@ export default {
             symmetricPoint,
           }
         );
-        store.commit("setShapeStyle", style);
+       mainStore.setShapeStyle(style);
       };
-      const throttleMove = throttle(move, throttleDelay);
+      const throttleMove = throttle(move, throttleDelay.value);
       const up = () => {
-        hasMove && store.commit("recordSnapshot");
+        hasMove && snapshotStore.recordSnapshot();
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
       };
@@ -176,7 +194,7 @@ export default {
       const pos = { ...props.defaultStyle };
       const startX = e.clientX;
       const startY = e.clientY;
-      const startRotate = pos.rotate;
+      const startRotate = pos.rotate.value;
 
       // 获取元素中心坐标
       const rect = shapeDom.value.getBoundingClientRect();
@@ -196,12 +214,12 @@ export default {
         const rotateDegAfter =
           (Math.atan2(curY - centerY, curX - centerX) * 180) / Math.PI;
 
-        pos.rotate = rotateDegAfter - rotateDegBefore + startRotate;
-        store.commit("setShapeStyle", pos);
+        pos.rotate.value = rotateDegAfter - rotateDegBefore + startRotate;
+        mainStore.setShapeStyle(pos);
       };
-      const throttleMove = throttle(move, throttleDelay);
+      const throttleMove = throttle(move, throttleDelay.value);
       const up = () => {
-        hasMove && store.commit("recordSnapshot");
+        hasMove && snapshotStore.recordSnapshot();
         document.removeEventListener("mousemove", throttleMove);
         document.removeEventListener("mouseup", up);
         getCursor(curComponent.value);
@@ -209,6 +227,12 @@ export default {
       document.addEventListener("mouseup", up);
       document.addEventListener("mousemove", throttleMove);
     };
+    // onMounted(() => {
+    //   emitter.on("shapeMouseup", hideArea);
+    // });
+    // onBeforeUnmount(() => {
+    //   emitter.off("shapeMouseup", hideArea);
+    // });
 
     return {
       shapeDom,

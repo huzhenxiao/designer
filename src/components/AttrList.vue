@@ -1,20 +1,12 @@
-<!--
- * @Author: your name
- * @Date: 2021-07-18 22:35:47
- * @LastEditTime: 2021-07-25 01:29:35
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /designer/my-designer/src/components/ComponentDataList.vue
--->
 <template>
   <div class="attr-list">
-    <p class="component-name">{{curComponent.label}}</p>
+    <p class="component-name">{{ curComponent.label }}</p>
     <component
       v-for="item in styleList"
-      :key="item.label"
+      :key="item.key"
       :label="item.label"
       :unit="item.unit"
-      :is="item.component"
+      :is="item.type"
       :value="item.value"
       :options="item.options"
       @valueChange="handleValueChange(item.key, $event)"
@@ -24,168 +16,40 @@
 
 <script>
 import { computed } from "vue";
-import { useStore } from "vuex";
-import CustomInputNumber from "./customComponent/CustomInputNumber.vue";
-import CustomInput from "./customComponent/CustomInput.vue";
-import CustomSelect from "./customComponent/CustomSelect.vue";
-import CustomColorPicker from './customComponent/CustomColorPicker.vue'
+import InputNumber from "./customComponent/InputNumber.vue";
+import Input from "./customComponent/Input.vue";
+import Select from "./customComponent/Select.vue";
+import ColorPicker from "./customComponent/ColorPicker.vue";
+
+import { storeToRefs } from "pinia";
+import { useMainStore } from "@/store";
+
 export default {
   components: {
-    CustomInputNumber,
-    CustomInput,
-    CustomSelect,
-    CustomColorPicker,
+    InputNumber,
+    Input,
+    Select,
+    ColorPicker
   },
   setup() {
-    const styleMap = {
-      width: {
-        label: "宽",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      height: {
-        label: "高",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      left: {
-        label: "x坐标",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      top: {
-        label: "y坐标",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      rotate: {
-        label: "旋转",
-        component: "custom-input-number",
-        unit: '°',
-      },
-      color: {
-        label: "字体颜色",
-        component: "custom-color-picker",
-      },
-      fontSize: {
-        label: "字体大小",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      fontWeight: {
-        label: "字体粗细",
-        component: "custom-input-number",
-      },
-      lineHeight: {
-        label: "行高",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      letterSpacing: {
-        label: "字间距",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      backgroundColor: {
-        label: "背景颜色",
-        component: "custom-color-picker",
-      },
-      borderWidth: {
-        label: "边框宽度",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      borderStyle: {
-        label: "边框风格",
-        component: "custom-select",
-        options: [
-          {
-            value: "solid",
-            label: "实线",
-          },
-          {
-            value: "dotted",
-            label: "点线",
-          },
-          {
-            value: "dashed",
-            label: "虚线",
-          },
-        ],
-      },
-      borderColor: {
-        label: "边框颜色",
-        component: "custom-color-picker",
-      },
-      borderRadius: {
-        label: "边框圆角",
-        component: "custom-input-number",
-        unit: 'px',
-      },
-      opacity: {
-        label: "透明度",
-        component: "custom-input-number",
-      },
-      textAlign: {
-        label: "左右对齐",
-        component: "custom-select",
-        options: [
-          {
-            value: "left",
-            label: "左对齐",
-          },
-          {
-            value: "center",
-            label: "居中",
-          },
-          {
-            value: "right",
-            label: "右对齐",
-          },
-        ],
-      },
-      verticalAlign: {
-        label: "垂直对齐",
-        component: "custom-select",
-        options: [
-          {
-            value: "top",
-            label: "顶对齐",
-          },
-          {
-            value: "middle",
-            label: "居中",
-          },
-          {
-            value: "bottom",
-            label: "底对齐",
-          },
-        ],
-      },
-    };
-    const store = useStore();
-    const curComponent = computed(() => store.state.curComponent);
+    const mainainStore = useMainStore();
+    const { curComponent } = storeToRefs(mainainStore);
     const styleList = computed(() =>
-      Object.keys(store.state.curComponent.style).map((key) => ({
+      Object.keys(curComponent.value.style).map(key => ({
         key,
-        value: store.state.curComponent.style[key],
-        label: styleMap[key].label,
-        unit: styleMap[key].unit,
-        component: styleMap[key].component,
-        options: styleMap[key].options,
+        ...curComponent.value.style[key]
       }))
     );
+    
     const handleValueChange = (key, value) => {
-      console.log('key',key);
-      console.log('value',value);
-      store.commit("setCurComponentStyle", { key, value });
+      mainainStore.setCurComponentStyle({ key, value });
     };
     return {
       curComponent,
       styleList,
-      handleValueChange,
+      handleValueChange
     };
-  },
+  }
 };
 </script>
 
@@ -194,7 +58,7 @@ export default {
   width: 100%;
   height: 100%;
 
-  .component-name{
+  .component-name {
     font-size: 16px;
     color: #999;
     height: 30px;

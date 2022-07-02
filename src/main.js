@@ -1,70 +1,27 @@
-/*
- * @Author: your name
- * @Date: 2021-06-30 17:38:26
- * @LastEditTime: 2021-07-28 01:04:32
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /designer/my-designer/src/main.js
- */
+
 import { createApp, defineAsyncComponent } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import store from "./store";
+import { createPinia } from 'pinia'
 import "styles/index.scss";
-import {
-  ElButton,
-  ElIcon,
-  ElMessage,
-  ElTabs,
-  ElTabPane,
-  ElForm,
-  ElFormItem,
-  ElInput,
-  ElInputNumber,
-  ElSelect,
-  ElOption,
-  ElColorPicker,
-} from "element-plus";
-
+import * as ElIcons from '@element-plus/icons-vue'
 const app = createApp(App);
 
-const components = [
-  ElButton,
-  ElIcon,
-  ElTabs,
-  ElTabPane,
-  ElForm,
-  ElFormItem,
-  ElInput,
-  ElInputNumber,
-  ElSelect,
-  ElOption,
-  ElColorPicker,
-];
-const plugins = [ElMessage];
-components.forEach((component) => {
-  app.use(component);
-});
-plugins.forEach((plugin) => {
-  app.use(plugin);
-});
+for (const icon in ElIcons) {
+  app.component(icon,ElIcons[icon])
+}
 
-// 异步加载自定义组件
-const customComponentsMap = {
-  "v-text": "VText",
-  "v-button": "VButton",
-  pic: "Picture",
-  "rect-shape": "RectShape",
-  "Group": "Group",
-};
-Object.keys(customComponentsMap).forEach((key) => {
+// 异步加载元件
+const metaComponents = import.meta.glob('./metaComponent/*.vue')
+Object.entries(metaComponents).forEach(([key, value]) => {
+  const name = key.split('/').pop().replace(/\.vue/g, '').toLowerCase();
   app.component(
-    key,
-    defineAsyncComponent(() =>
-      import(`./custom-component/${customComponentsMap[key]}.vue`)
-    )
+    `iot-${name}`,
+    defineAsyncComponent(value)
   );
-});
+  
+  
+})
 
-app.use(router).use(store).mount("#app");
+app.use(router).use(createPinia()).mount("#app");
 

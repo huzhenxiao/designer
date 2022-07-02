@@ -5,107 +5,128 @@
     </header>
     <main>
       <section class="left">
-        <ComponentList />
+        <PageManage class="left-multipage" />
+        <ComponentList class="left-component-list" />
       </section>
       <section class="center">
-        <div
-          class="content"
-          @drop="handleDrop"
-          @dragover="handleDragOver"
-          @mousedown="handleMouseDown"
-          @mouseup="deselectCurComponent"
-        >
-          <Editor />
-        </div>
+        <el-scrollbar>
+          <div
+            class="content"
+            @drop="handleDrop"
+            @dragover="handleDragOver"
+            @mousedown="handleMouseDown"
+            @mouseup="deselectCurComponent"
+          >
+            <Editor />
+          </div>
+        </el-scrollbar>
       </section>
       <section class="right">
-        <el-tabs v-model="activeTab">
-          <el-tab-pane label="数据" name="data">
-            <data-list v-if="curComponent" />
-          </el-tab-pane>
-          <el-tab-pane label="样式" name="style">
-            <attr-list v-if="curComponent" />
-          </el-tab-pane>
-        </el-tabs>
+        <el-scrollbar>
+          <el-tabs v-model="activeTab">
+            <el-tab-pane label="样式" name="style">
+              <attr-list v-if="curComponent" />
+            </el-tab-pane>
+            <el-tab-pane label="数据" name="data">
+              <data-list v-if="curComponent" />
+            </el-tab-pane>
+            <el-tab-pane label="事件" name="events">
+              <event-list v-if="curComponent" />
+            </el-tab-pane>
+          </el-tabs>
+        </el-scrollbar>
       </section>
     </main>
   </div>
 </template>
 
 <script>
-import { useStore } from "vuex";
-import componentListData from "@/custom-component/componentList";
+import { storeToRefs } from "pinia";
+import { useMainStore, useSnapshotStore, useContextmenuStore } from "@/store";
+import componentListData from "@/metaComponent/componentList";
 import Toolbar from "comps/Toolbar.vue";
 import ComponentList from "comps/ComponentList.vue";
+import PageManage from "comps/PageManage.vue";
 import Editor from "comps/editor/Index.vue";
 import { deepClone } from "utils/utils";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 import { computed, ref, onMounted, onBeforeMount } from "vue";
 import DataList from "comps/DataList.vue";
 import AttrList from "comps/AttrList.vue";
+import EventList from "comps/EventList.vue";
 
 export default {
   name: "home",
   components: {
     Toolbar,
     ComponentList,
+    PageManage,
     Editor,
     DataList,
     AttrList,
+    EventList
   },
   setup() {
-    const store = useStore();
-    const isClickComponent = computed(() => store.state.isClickComponent);
-
+    const mainStore = useMainStore();
+    const snapshotStore = useSnapshotStore();
+    const contextmenuStore = useContextmenuStore();
+    const { isClickComponent, curComponent } = storeToRefs(mainStore);
     onBeforeMount(() => {
-      store.commit('setEditMode','edit');
+      mainStore.setEditMode("edit");
       const canvasData = JSON.parse(sessionStorage.getItem("canvasData"));
       if (canvasData) {
-        store.commit("setComponentData", canvasData.componentData);
-        store.commit("setCanvasStyleData", canvasData.canvasStyleData);
+        mainStore.setComponentData(canvasData.componentData);
+        mainStore.setCanvasStyleData(canvasData.canvasStyleData);
       }
     });
 
-    const handleDrop = (e) => {
+    const handleDrop = e => {
       e.preventDefault();
       e.stopPropagation();
+
       const component = deepClone(
-        componentListData[e.dataTransfer.getData("index")]
+        componentListData.find(i => i.id === e.dataTransfer.getData("id"))
       );
-      component.style.left = e.offsetX;
-      component.style.top = e.offsetY;
-      component.id = uuidv4();
-      store.commit("addComponent", { component });
-      store.commit("recordSnapshot");
+      if (component.id === "image") {
+        component.propValue.value = e.dataTransfer.getData("imgUrl");
+      }
+
+      component.style.left.value = e.offsetX;
+      component.style.top.value = e.offsetY;
+      component.id = nanoid();
+      console.log("component", component);
+
+      mainStore.addComponent({ component });
+      mainStore.setCurComponent({ component });
+      snapshotStore.recordSnapshot();
     };
-    const handleDragOver = (e) => {
+    const handleDragOver = e => {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
       console.log("handleDragOver");
     };
     const handleMouseDown = () => {
-      store.commit("setClickComponentStatus", false);
+      mainStore.setClickComponentStatus(false);
       console.log("handleMouseDown");
     };
-    const deselectCurComponent = (e) => {
+    const deselectCurComponent = e => {
       if (!isClickComponent.value) {
-        store.commit("setCurComponent", { component: null, index: null });
+        mainStore.setCurComponent({ component: null, index: null });
       }
       // 0 左击 1 滚轮 2 右击
       if (e.button !== 2) {
-        store.commit("hideContextMenu");
+        contextmenuStore.hideContextMenu();
       }
       console.log("deselectCurComponent");
     };
 
-    const activeTab = ref("style");
-    const curComponent = computed(() => store.state.curComponent);
+    const activeTab = ref("data");
     // onMounted(() => {
-    //   let num = 2000
+    //   let num = 3000
     //   while (num>0) {
     //     console.log('num',num);
 
-    //     const index = Math.floor( Math.random()*4)
+    //     const index = Math.floor( Math.random()*7)
     //     const component = deepClone(
     //     componentListData[index]
     //   );
@@ -113,11 +134,11 @@ export default {
     //     const top = Math.random()*600
     //     console.log(left,top);
 
-    //     component.style.left = left;
-    //     component.style.top = top;
+    //     component.style.left.value = left;
+    //     component.style.top.value = top;
     //     component.id = num;
     //     console.log(index,component);
-    //       store.commit("addComponent", { component });
+    //       mainStore.addComponent({ component });
 
     //     num--
     //   }
@@ -129,31 +150,37 @@ export default {
       handleMouseDown,
       deselectCurComponent,
       activeTab,
-      curComponent,
+      curComponent
     };
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .home {
-  height: 100vh;
+  height: 100%;
   background: #fff;
+  overflow: hidden;
   main {
-    height: calc(100% - 65px);
     display: flex;
-
+    height: calc(100% - 65px);
     .left {
       height: 100%;
-      width: 300px;
+      width: 250px;
       padding-top: 10px;
+      box-sizing: border-box;
+      .left-multipage {
+        height: 200px;
+      }
+      .left-component-list {
+        height: calc(100% - 200px);
+      }
     }
 
     .right {
       height: 100%;
       width: 260px;
-
-      ::v-deep(.el-tabs__header) {
+      :deep(.el-tabs__header) {
         margin-bottom: 0;
       }
     }
@@ -161,18 +188,18 @@ export default {
     .center {
       flex: 1;
       background: #f5f5f5;
-      height: 100%;
+      height: calc(100% - 65px);
       overflow: auto;
       padding: 20px;
+      box-sizing: border-box;
 
       .content {
         width: 100%;
         height: 100%;
-        overflow: auto;
       }
     }
   }
-  ::v-deep(.el-tabs__nav-wrap) {
+  :deep(.el-tabs__nav-wrap) {
     padding: 0 20px;
   }
 }

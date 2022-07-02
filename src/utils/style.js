@@ -26,9 +26,9 @@ export function getStyleInclude(style = {}, contain = []) {
   Object.keys(style).forEach((key) => {
     if (contain.includes(key)) {
       if (key !== "rotate") {
-        result[key] = needUnit.includes(key) ? `${style[key]}px` : style[key];
+        result[key] = needUnit.includes(key) ? `${style[key].value}px` : style[key].value;
       } else {
-        result.transform = `${key}(${style[key]}deg)`;
+        result.transform = `${key}(${style[key].value}deg)`;
       }
     }
   });
@@ -53,9 +53,9 @@ export function getStyleExclude(style = {}, filter = []) {
   Object.keys(style).forEach((key) => {
     if (!filter.includes(key)) {
       if (key !== "rotate") {
-        result[key] = needUnit.includes(key) ? `${style[key]}px` : style[key];
+        result[key] = needUnit.includes(key) ? `${style[key].value}px` : style[key].value;
       } else {
-        result.transform = `${key}(${style[key]}deg)`;
+        result.transform = `${key}(${style[key].value}deg)`;
       }
     }
   });
@@ -64,23 +64,27 @@ export function getStyleExclude(style = {}, filter = []) {
 }
 
 export function getComponentRotatedStyle(style) {
-  const rotatedStyle = { ...style };
-  if (rotatedStyle.rotate === 0) {
-    rotatedStyle.right = rotatedStyle.left + rotatedStyle.width;
-    rotatedStyle.bottom = rotatedStyle.top + rotatedStyle.height;
+  const rotatedStyle = {};
+  if (style.rotate.value === 0) {
+    rotatedStyle.left = style.left.value;
+    rotatedStyle.top = style.top.value;
+    rotatedStyle.right = style.left.value + style.width.value;
+    rotatedStyle.bottom = style.top.value + style.height.value;
+    rotatedStyle.width = style.width.value;
+    rotatedStyle.height = style.height.value;
   } else {
     const newWidth =
-      rotatedStyle.width * Math.abs(cos(rotatedStyle.rotate)) +
-      rotatedStyle.height * Math.abs(sin(rotatedStyle.rotate));
-    const diffX = (rotatedStyle.width - newWidth) / 2;
-    rotatedStyle.left += diffX;
+      style.width.value * Math.abs(cos(style.rotate.value)) +
+      style.height.value * Math.abs(sin(style.rotate.value));
+    const diffX = (style.width.value - newWidth) / 2;
+    rotatedStyle.left = style.left.value + diffX;
     rotatedStyle.right = rotatedStyle.left + newWidth;
 
     const newHeight =
-      rotatedStyle.height * Math.abs(cos(rotatedStyle.rotate)) +
-      rotatedStyle.width * Math.abs(sin(rotatedStyle.rotate));
-    const diffY = (rotatedStyle.height - newHeight) / 2;
-    rotatedStyle.top += diffY;
+      style.height.value * Math.abs(cos(style.rotate.value)) +
+      style.width.value * Math.abs(sin(style.rotate.value));
+    const diffY = (style.height.value - newHeight) / 2;
+    rotatedStyle.top = style.top.value + diffY;
     rotatedStyle.bottom = rotatedStyle.top + newHeight;
     rotatedStyle.width = newWidth;
     rotatedStyle.height = newHeight;

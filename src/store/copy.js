@@ -1,49 +1,49 @@
 import { deepClone } from "utils/utils";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from 'nanoid'
+import { defineStore } from "pinia";
+import {useMainStore,useContextmenuStore} from './index';
+const mainStore = useMainStore();
+const contextmenuStore = useContextmenuStore();
 
-export default {
-  state: {
-    copyData: null,
-    isCut: false,
-  },
-  mutations: {
-    copy(state) {
-      if (!state.curComponent) return;
-      state.copyData = {
-        data: deepClone(state.curComponent),
-        index: state.curComponentIndex,
+export const useCopyStore = defineStore({
+  id: "copy",
+  state: () => {
+    return {
+      copyData: null,
+      isCut: false,
+    };
+  }, 
+  actions: {
+    copy() {
+      if (!mainStore.curComponent) return;
+      this.copyData = {
+        data: deepClone(mainStore.curComponent),
+        index: this.curComponentIndex,
       };
-      state.isCut = false;
+      this.isCut = false;
     },
-    cut(state) {
-      if (!state.curComponent) return;
-      if (state.copyData) {
-        const component = deepClone(state.copyData.data);
-        component.id = uuidv4();
-        this.commit("addComponent", {
-          component,
-        });
-      }
-      this.commit("copy");
-      this.commit("deleteComponent");
-      state.isCut = true;
+    cut() {
+      if (!mainStore.curComponent) return;
+      this.copy();
+      mainStore.deleteComponent();
+      this.isCut = true;
     },
-    paste(state, isMouse) {
-      if (!state.copyData) return;
-      const data = state.copyData.data;
+    paste(isMouse) {
+      if (!this.copyData) return;
+      const data = this.copyData.data;
       if (isMouse) {
-        data.style.left = state.menuLeft;
-        data.style.top = state.menuTop;
+        data.style.left.value = contextmenuStore.menuLeft;
+        data.style.top.value = contextmenuStore.menuTop;
       } else {
-        data.style.top += 10;
-        data.style.left += 10;
+        data.style.top.value += 10;
+        data.style.left.value += 10;
       }
-      data.id = uuidv4();
-      this.commit("addComponent", { component: deepClone(data) });
+      data.id = nanoid();
+      mainStore.addComponent({ component: deepClone(data) });
 
-      if (state.isCut) {
-        state.copyData = null;
+      if (this.isCut) {
+        this.copyData = null;
       }
     },
-  },
-};
+  }
+});

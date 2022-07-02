@@ -1,17 +1,22 @@
-export default {
-  state: {
-    menuLeft: 0,
-    menuTop: 0,
-    menuShow: false,
+import { defineStore } from "pinia";
+
+export const useContextmenuStore = defineStore({
+  id: "contextmenu",
+  state: () => {
+    return {
+      menuLeft: 0,
+      menuTop: 0,
+      menuShow: false
+    };
   },
-  mutations: {
-    showContextMenu(state, { left, top }) {
-      state.menuLeft = left;
-      state.menuTop = top;
-      state.menuShow = true;
+  actions: {
+    showContextMenu({ left, top }) {
+      this.menuLeft = left;
+      this.menuTop = top;
+      this.menuShow = true;
     },
-    hideContextMenu(state) {
-      state.menuShow = false;
-    },
-  },
-};
+    hideContextMenu() {
+      this.menuShow = false;
+    }
+  }
+});

@@ -1,101 +1,111 @@
-/*
- * @Author: your name
- * @Date: 2021-07-05 21:43:23
- * @LastEditTime: 2021-07-28 22:34:04
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /my-designer/src/store/compose.js
- */
 import { $ } from "utils/utils";
 import { decomposeComponent } from "utils/compose";
-import { v4 as uuidv4 } from "uuid";
-import { commonStyle, commonAttr } from "@/custom-component/componentList";
+import { nanoid } from 'nanoid'
+import { commonStyle, commonAttr } from "@/metaComponent/componentList";
 import emitter from "utils/eventBus";
+import { defineStore } from "pinia";
+import { useMainStore } from "./main";
+const mainStore = useMainStore()
 
-export default {
-  state: {
-    editor: null,
-    areaData: {
-      style: {
-        top: 0,
-        left: 0,
-        width: 0,
-        height: 0,
-      },
-      components: [],
-    },
+export const useComposeStore = defineStore({
+  id: "compose",
+  state: () => {
+    return {
+      editor: null,
+      areaData: {
+        style: {
+          top: 0,
+          left: 0,
+          width: 0,
+          height: 0
+        },
+        components: []
+      }
+    };
   },
-  mutations: {
-    getEditor(state) {
-      state.editor = $("#editor");
+  actions: {
+    getEditor() {
+      this.editor = $("#editor");
     },
-    setAreaData(state, data) {
-      state.areaData = data;
+    setAreaData(data) {
+      this.areaData = data;
     },
-    compose({ componentData, areaData, editor }) {
+    compose() {
       const components = [];
-      areaData.components.forEach((component) => {
+      this.areaData.components.forEach(component => {
         if (component.component !== "Group") {
           components.push(component);
         } else {
           // 如果组合的组件中已经存在组合数据，则需要先拆分
           const parentStyle = { ...component.style };
           const subComponents = component.propValue;
-          const editorRect = editor.getBoundingClientRect();
+          const editorRect = this.editor.getBoundingClientRect();
           // 原先是组合的需要先拆分
-          subComponents.forEach((component) => {
+          subComponents.forEach(component => {
             decomposeComponent(component, editorRect, parentStyle);
           });
           components.push(...component.propValue);
         }
       });
 
-      this.commit("addComponent", {
+      mainStore.addComponent({
         component: {
-          id: uuidv4(),
-          component: "Group",
+          id: nanoid(),
+          component: "group",
           style: {
-            ...commonStyle,
-            ...areaData.style,
+            ...commonStyle(),
+            top: {
+              value:this.areaData.style.top
+            },
+            left: {
+              value:this.areaData.style.left
+            },
+            width: {
+              value:this.areaData.style.width
+            },
+            height: {
+              value:this.areaData.style.height
+            },
           },
           label: "组合",
-          propValue: components,
+          propValue: '',
+          children: components,
           businessData: {},
-          ...commonAttr,
-        },
+          ...commonAttr
+        }
       });
 
       emitter.emit("hideArea");
 
-      this.commit("batchDeleteComponent", areaData.components);
+      this.batchDeleteComponent();
 
-      this.commit("setCurComponent", {
-        component: componentData[componentData.length - 1],
-        index: componentData.length - 1,
+      mainStore.setCurComponent({
+        component: mainStore.componentData[mainStore.componentData.length - 1],
+        index: mainStore.componentData.length - 1
       });
 
-      areaData.components = [];
+      this.areaData.components = [];
     },
     // 组合后的component需要从componentData中删除
-    batchDeleteComponent({ componentData }, deleteData) {
-      deleteData.forEach((component) => {
-        for (let i = 0; i < componentData.length; i++) {
-          if (component.id === componentData[i].id) {
-            componentData.splice(i, 1);
+    batchDeleteComponent() {
+      this.areaData.components.forEach(component => {
+        for (let i = 0; i < mainStore.componentData.length; i++) {
+          if (component.id === mainStore.componentData[i].id) {
+            mainStore.componentData.splice(i, 1);
             break;
           }
         }
       });
     },
-    decompose({ curComponent, editor }) {
-      const parentStyle = { ...curComponent.style };
-      const components = curComponent.propValue;
-      const editorRect = editor.getBoundingClientRect();
-      this.commit("deleteComponent");
-      components.forEach((component) => {
+    decompose() {
+      const parentStyle = { ...mainStore.curComponent.style };
+      const components = mainStore.curComponent.children;
+      const editorRect = this.editor.getBoundingClientRect();
+      mainStore.deleteComponent();
+      components.forEach(component => {
         decomposeComponent(component, editorRect, parentStyle);
-        this.commit("addComponent", { component });
+        mainStore.addComponent({ component });
       });
-    },
-  },
-};
+    }
+  }
+});
