@@ -1,10 +1,5 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    title="点击事件"
-    center
-    :before-close="handleBeforeClose"
-  >
+  <el-dialog v-model="dialogVisible" title="点击事件" center :before-close="handleBeforeClose">
     <el-form :model="form" label-width="120px">
       <el-form-item label="动作">
         <el-select v-model="form.action" placeholder="请选择">
@@ -25,18 +20,11 @@
       </el-form-item>
       <div v-if="form.action === 'openLink'">
         <el-form-item label="链接">
-          <el-input
-            v-model="form.pageOrLink"
-            placeholder="请以http或者https开头"
-          />
+          <el-input v-model="form.pageOrLink" placeholder="请以http或者https开头" />
         </el-form-item>
         <el-form-item label="展现">
-          <el-radio v-model="form.showType" label="page" size="large"
-            >新页面</el-radio
-          >
-          <el-radio v-model="form.showType" label="dialog" size="large"
-            >弹窗</el-radio
-          >
+          <el-radio v-model="form.showType" label="page" size="large">新页面</el-radio>
+          <el-radio v-model="form.showType" label="dialog" size="large">弹窗</el-radio>
         </el-form-item>
       </div>
     </el-form>
@@ -50,7 +38,7 @@
 </template>
 
 <script setup>
-import {  ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted } from 'vue';
 const props = defineProps({
   formValue: {
     type: Object,
@@ -61,29 +49,29 @@ const props = defineProps({
     default: () => []
   }
 });
-const emit = defineEmits(["visibleChange", "valueChange"]);
+const emit = defineEmits(['visibleChange', 'valueChange']);
 let dialogVisible = ref(true);
 const form = reactive({
-  action: "",
-  pageOrLink: "",
-  showType: "page",
-  value:false,
+  action: '',
+  pageOrLink: '',
+  showType: 'page',
+  value: false
 });
 onMounted(() => {
-  Object.keys(props.formValue).forEach(key => {
+  Object.keys(props.formValue).forEach((key) => {
     form[key] = props.formValue[key];
   });
 });
 const handleClose = () => {
   dialogVisible.value = false;
-  emit("visibleChange", dialogVisible.value);
+  emit('visibleChange', dialogVisible.value);
 };
 const handleConfrim = () => {
-  emit("valueChange", form);
+  emit('valueChange', form);
   handleClose();
 };
-const handleBeforeClose = done => {
-  emit("visibleChange", dialogVisible.value);
+const handleBeforeClose = (done) => {
+  emit('visibleChange', dialogVisible.value);
 };
 </script>
 

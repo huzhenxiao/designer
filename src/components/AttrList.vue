@@ -15,14 +15,14 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import InputNumber from "./customComponent/InputNumber.vue";
-import Input from "./customComponent/Input.vue";
-import Select from "./customComponent/Select.vue";
-import ColorPicker from "./customComponent/ColorPicker.vue";
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import InputNumber from './customComponent/InputNumber.vue';
+import Input from './customComponent/Input.vue';
+import Select from './customComponent/Select.vue';
+import ColorPicker from './customComponent/ColorPicker.vue';
 
-import { storeToRefs } from "pinia";
-import { useMainStore } from "@/store";
+import { useMainStore } from '@/store';
 
 export default {
   components: {
@@ -35,12 +35,12 @@ export default {
     const mainainStore = useMainStore();
     const { curComponent } = storeToRefs(mainainStore);
     const styleList = computed(() =>
-      Object.keys(curComponent.value.style).map(key => ({
+      Object.keys(curComponent.value.style).map((key) => ({
         key,
         ...curComponent.value.style[key]
       }))
     );
-    
+
     const handleValueChange = (key, value) => {
       mainainStore.setCurComponentStyle({ key, value });
     };

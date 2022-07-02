@@ -6,12 +6,12 @@
 export default {
   props: {
     propValue: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 

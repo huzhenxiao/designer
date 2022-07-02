@@ -1,10 +1,9 @@
-import { defineStore } from "pinia";
-import { useMainStore } from "./main";
+import { defineStore } from 'pinia';
+import { useMainStore } from './main';
+
 export const useLockStore = defineStore({
-  id: "lock",
-  state: () => {
-    return {};
-  },
+  id: 'lock',
+  state: () => ({}),
   actions: {
     lock() {
       useMainStore().curComponent.isLock = true;

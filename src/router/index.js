@@ -1,24 +1,23 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
-  base: "/",
+  base: '/',
   history: createWebHistory(),
   routes: [
     {
-      path: "/",
-      redirect:"/designer"
+      path: '/',
+      redirect: '/designer'
     },
     {
-      path: "/designer",
-      name: "designer",
-      component: () => import("views/Home.vue"),
+      path: '/designer',
+      name: 'designer',
+      component: () => import('views/Home.vue')
     },
     {
-      path: "/preview",
-      name: "preview",
-      component: () => import("views/Preview.vue"),
-    },
-  ],
+      path: '/preview',
+      name: 'preview',
+      component: () => import('views/Preview.vue')
+    }
+  ]
 });
-
 export default router;

@@ -7,7 +7,7 @@
       <slot></slot>
     </div>
     <span v-if="unit" class="unit">
-      {{unit}}
+      {{ unit }}
     </span>
   </div>
 </template>
@@ -16,11 +16,11 @@
 export default {
   props: {
     label: String,
-    unit: String,
+    unit: String
   },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 
@@ -41,7 +41,7 @@ export default {
   .content {
     flex: 1 1 calc(100% - 90px);
   }
-  .unit{
+  .unit {
     line-height: 30px;
     font-size: 14px;
     color: #666;

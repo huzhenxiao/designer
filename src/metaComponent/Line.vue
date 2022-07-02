@@ -3,9 +3,10 @@
 </template>
 
 <script>
-import { Graph } from "@antv/x6";
-import { ref, computed, onMounted, watchEffect, watch } from "vue";
-import emitter from "utils/eventBus";
+import { Graph } from '@antv/x6';
+import { ref, computed, onMounted, watchEffect, watch } from 'vue';
+import emitter from 'utils/eventBus';
+
 export default {
   props: {
     propValue: {
@@ -17,11 +18,11 @@ export default {
     },
     editMode: {
       type: String,
-      default:'edit'
+      default: 'edit'
     },
     isLock: {
       type: Boolean,
-      default:false
+      default: false
     },
     scale: {
       type: Number
@@ -53,7 +54,7 @@ export default {
       const sY = sourceY.value;
       const tX = targetX.value;
       const tY = targetY.value;
-      const scale = props.scale;
+      const { scale } = props;
       updateEdge(sX, sY, tX, tY);
     });
     watchEffect(() => {
@@ -68,11 +69,11 @@ export default {
         edge = graph.addEdge({
           source: [sourceX.value, sourceY.value],
           target: [targetX.value, targetY.value],
-          label: "",
+          label: '',
           tools: [lineType],
           attrs: {
             line: {
-              targetMarker: "classic",
+              targetMarker: 'classic',
               stroke: lineColor
             }
           }
@@ -82,7 +83,7 @@ export default {
     watch(
       () => props.scale,
       (scale, prevScale) => {
-        console.log("scale", scale);
+        console.log('scale', scale);
         const sX = (sourceX.value * scale) / prevScale;
         const sY = (sourceY.value * scale) / prevScale;
         const tX = (targetX.value * scale) / prevScale;
@@ -91,11 +92,11 @@ export default {
       }
     );
     const lineWrap = ref(null);
-    console.log(props.editMode,'props.editMode');
-    
-    const isEdit = props.editMode==='edit';
-    console.log('isEdit',isEdit);
-    
+    console.log(props.editMode, 'props.editMode');
+
+    const isEdit = props.editMode === 'edit';
+    console.log('isEdit', isEdit);
+
     onMounted(() => {
       graph = new Graph({
         container: lineWrap.value,
@@ -110,11 +111,11 @@ export default {
       edge = graph.addEdge({
         source: [sourceX.value, sourceY.value],
         target: [targetX.value, targetY.value],
-        label: "",
+        label: '',
         tools: [lineType.value],
         attrs: {
           line: {
-            targetMarker: "classic",
+            targetMarker: 'classic',
             stroke: lineColor.value
           }
         }
@@ -141,10 +142,10 @@ export default {
       //     }
       //   }
       // });
-      graph.on("edge:change:*", ({ edge }) => {
-        const { source, target,vertices } = edge;
-        console.log('edge',edge);
-        
+      graph.on('edge:change:*', ({ edge }) => {
+        const { source, target, vertices } = edge;
+        console.log('edge', edge);
+
         props.element.style.sourceX.value = source.x;
         props.element.style.sourceY.value = source.y;
         props.element.style.targetX.value = target.x;
@@ -157,11 +158,11 @@ export default {
       //   router: { name: 'er' },
       // })
     });
-    const handleMouseup = e => {
-      console.log("handleMouseup");
+    const handleMouseup = (e) => {
+      console.log('handleMouseup');
       // e.preventDefault();
       // e.stopPropagation();
-      emitter.emit("shapeMouseup");
+      emitter.emit('shapeMouseup');
       // const event = document.createEvent('Event');
       // event.initEvent('click', true, false);
       // document.dispatchEvent(event);

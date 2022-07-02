@@ -1,88 +1,88 @@
 <template>
   <div class="component-list" @dragstart="handleDragStart">
     <el-scrollbar height="100%">
-    <el-tabs v-model="activeTab" class="tabs">
-      <el-tab-pane label="元件库" name="element">
-        <el-collapse v-model="elementActive">
-          <el-collapse-item title="普通元件" name="common">
-            <div
-              v-for="(item, index) in components['element-common']"
-              :key="index"
-              class="component-item"
-              draggable="true"
-              :data-id="item.component"
-            >
-              <div class="wrap-img">
-                <el-icon><component :is="item.icon"/></el-icon>
+      <el-tabs v-model="activeTab" class="tabs">
+        <el-tab-pane label="元件库" name="element">
+          <el-collapse v-model="elementActive">
+            <el-collapse-item title="普通元件" name="common">
+              <div
+                v-for="(item, index) in components['element-common']"
+                :key="index"
+                class="component-item"
+                draggable="true"
+                :data-id="item.component"
+              >
+                <div class="wrap-img">
+                  <el-icon><component :is="item.icon" /></el-icon>
+                </div>
+                <span class="text">{{ item.label }}</span>
               </div>
-              <span class="text">{{ item.label }}</span>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-      </el-tab-pane>
-      <el-tab-pane label="图库" name="image">
-        <el-collapse v-model="imageActive">
-          <el-collapse-item title="系统图库" name="system">
-            <div
-              v-for="(item, index) in components['image-system']"
-              :key="index"
-              class="component-item"
-              draggable="true"
-              :data-id="item.component"
-            >
-              <div class="image-system">
-                <el-image
-                  style="width: 100%; height: 100%"
-                  :src="item.propValue.value"
-                  :data-id="item.id"
-                  :data-url="item.propValue.value"
-                  fit="fill"
-                />
+            </el-collapse-item>
+          </el-collapse>
+        </el-tab-pane>
+        <el-tab-pane label="图库" name="image">
+          <el-collapse v-model="imageActive">
+            <el-collapse-item title="系统图库" name="system">
+              <div
+                v-for="(item, index) in components['image-system']"
+                :key="index"
+                class="component-item"
+                draggable="true"
+                :data-id="item.component"
+              >
+                <div class="image-system">
+                  <el-image
+                    style="width: 100%; height: 100%"
+                    :src="item.propValue.value"
+                    :data-id="item.id"
+                    :data-url="item.propValue.value"
+                    fit="fill"
+                  />
+                </div>
               </div>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-      </el-tab-pane>
-    </el-tabs>
+            </el-collapse-item>
+          </el-collapse>
+        </el-tab-pane>
+      </el-tabs>
     </el-scrollbar>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
-import componentList from "@/metaComponent/componentList";
-const systemImgs = import.meta.globEager("/public/assets/defaultImg/*");
+import componentList from '@/metaComponent/componentList';
 
-const handleDragStart = e => {
-  e.dataTransfer.setData("id", e.target.dataset.id);
-  e.dataTransfer.setData("imgUrl", e.target.dataset.url);
-  
+const systemImgs = import.meta.globEager('/public/assets/defaultImg/*');
+
+const handleDragStart = (e) => {
+  e.dataTransfer.setData('id', e.target.dataset.id);
+  e.dataTransfer.setData('imgUrl', e.target.dataset.url);
 };
 const components = reactive({});
 const getImageIndex = (i) => i.propValue.value.split('/').pop().split('.').shift();
 onMounted(() => {
-  componentList.forEach(item => {
+  componentList.forEach((item) => {
     components[`${item.tabType}-${item.collapseType}`] =
       components[`${item.tabType}-${item.collapseType}`] || [];
     components[`${item.tabType}-${item.collapseType}`].push(item);
   });
-  const systemImgsComponent = components["image-system"].pop();
+  const systemImgsComponent = components['image-system'].pop();
   Object.entries(systemImgs).forEach(([key, value]) => {
     const component = cloneDeep(systemImgsComponent);
-    components["image-system"].push({
+    components['image-system'].push({
       ...component,
       propValue: {
         ...component.propValue,
         value: value.default
-      },
+      }
     });
   });
-  components["image-system"].sort((a,b)=>getImageIndex(a)-getImageIndex(b))
+  components['image-system'].sort((a, b) => getImageIndex(a) - getImageIndex(b));
 });
-const activeTab = ref("element");
-const elementActive = ref(["common"]);
-const imageActive = ref(["system"]);
+const activeTab = ref('element');
+const elementActive = ref(['common']);
+const imageActive = ref(['system']);
 </script>
 
 <style lang="scss" scoped>
@@ -110,7 +110,7 @@ const imageActive = ref(["system"]);
       padding-top: 10px;
       margin: 0 auto;
     }
-    .image-system{
+    .image-system {
       width: 100%;
       height: 100%;
     }

@@ -41,22 +41,22 @@
 </template>
 
 <script>
-import { storeToRefs } from "pinia";
-import { useMainStore, useSnapshotStore, useContextmenuStore } from "@/store";
-import componentListData from "@/metaComponent/componentList";
-import Toolbar from "comps/Toolbar.vue";
-import ComponentList from "comps/ComponentList.vue";
-import PageManage from "comps/PageManage.vue";
-import Editor from "comps/editor/Index.vue";
-import { deepClone } from "utils/utils";
-import { nanoid } from "nanoid";
-import { computed, ref, onMounted, onBeforeMount } from "vue";
-import DataList from "comps/DataList.vue";
-import AttrList from "comps/AttrList.vue";
-import EventList from "comps/EventList.vue";
+import { storeToRefs } from 'pinia';
+import Toolbar from 'comps/Toolbar.vue';
+import ComponentList from 'comps/ComponentList.vue';
+import PageManage from 'comps/PageManage.vue';
+import Editor from 'comps/editor/Index.vue';
+import { deepClone } from 'utils/utils';
+import { nanoid } from 'nanoid';
+import { ref, onMounted, onBeforeMount } from 'vue';
+import DataList from 'comps/DataList.vue';
+import AttrList from 'comps/AttrList.vue';
+import EventList from 'comps/EventList.vue';
+import componentListData from '@/metaComponent/componentList';
+import { useMainStore, useSnapshotStore, useContextmenuStore } from '@/store';
 
 export default {
-  name: "home",
+  name: 'home',
   components: {
     Toolbar,
     ComponentList,
@@ -72,44 +72,44 @@ export default {
     const contextmenuStore = useContextmenuStore();
     const { isClickComponent, curComponent } = storeToRefs(mainStore);
     onBeforeMount(() => {
-      mainStore.setEditMode("edit");
-      const canvasData = JSON.parse(sessionStorage.getItem("canvasData"));
+      mainStore.setEditMode('edit');
+      const canvasData = JSON.parse(sessionStorage.getItem('canvasData'));
       if (canvasData) {
         mainStore.setComponentData(canvasData.componentData);
         mainStore.setCanvasStyleData(canvasData.canvasStyleData);
       }
     });
 
-    const handleDrop = e => {
+    const handleDrop = (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       const component = deepClone(
-        componentListData.find(i => i.id === e.dataTransfer.getData("id"))
+        componentListData.find((i) => i.id === e.dataTransfer.getData('id'))
       );
-      if (component.id === "image") {
-        component.propValue.value = e.dataTransfer.getData("imgUrl");
+      if (component.id === 'image') {
+        component.propValue.value = e.dataTransfer.getData('imgUrl');
       }
 
       component.style.left.value = e.offsetX;
       component.style.top.value = e.offsetY;
       component.id = nanoid();
-      console.log("component", component);
+      console.log('component', component);
 
       mainStore.addComponent({ component });
       mainStore.setCurComponent({ component });
       snapshotStore.recordSnapshot();
     };
-    const handleDragOver = e => {
+    const handleDragOver = (e) => {
       e.preventDefault();
-      e.dataTransfer.dropEffect = "copy";
-      console.log("handleDragOver");
+      e.dataTransfer.dropEffect = 'copy';
+      console.log('handleDragOver');
     };
     const handleMouseDown = () => {
       mainStore.setClickComponentStatus(false);
-      console.log("handleMouseDown");
+      console.log('handleMouseDown');
     };
-    const deselectCurComponent = e => {
+    const deselectCurComponent = (e) => {
       if (!isClickComponent.value) {
         mainStore.setCurComponent({ component: null, index: null });
       }
@@ -117,10 +117,11 @@ export default {
       if (e.button !== 2) {
         contextmenuStore.hideContextMenu();
       }
-      console.log("deselectCurComponent");
+      console.log('deselectCurComponent');
     };
 
-    const activeTab = ref("data");
+    const activeTab = ref('data');
+    // 性能测试
     // onMounted(() => {
     //   let num = 3000
     //   while (num>0) {

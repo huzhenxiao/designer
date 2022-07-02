@@ -1,14 +1,12 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
 export const useContextmenuStore = defineStore({
-  id: "contextmenu",
-  state: () => {
-    return {
-      menuLeft: 0,
-      menuTop: 0,
-      menuShow: false
-    };
-  },
+  id: 'contextmenu',
+  state: () => ({
+    menuLeft: 0,
+    menuTop: 0,
+    menuShow: false
+  }),
   actions: {
     showContextMenu({ left, top }) {
       this.menuLeft = left;

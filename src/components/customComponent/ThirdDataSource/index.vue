@@ -7,7 +7,7 @@
       </div>
     </div>
     <el-row>
-      <el-col :span="24"><div class="grid-content bg-purple-dark"/></el-col>
+      <el-col :span="24"><div class="grid-content bg-purple-dark" /></el-col>
     </el-row>
 
     <el-dialog
@@ -20,10 +20,7 @@
     >
       <el-form :model="form" label-width="120px">
         <el-form-item label="地址">
-          <el-input
-            v-model="form.address"
-            placeholder="请以http或者https开头"
-          />
+          <el-input v-model="form.address" placeholder="请以http或者https开头" />
         </el-form-item>
         <el-form-item label="单位">
           <el-input v-model="form.unit" />
@@ -40,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch } from 'vue';
 import cloneDeep from 'lodash/cloneDeep';
 const props = defineProps({
   data: {
@@ -57,8 +54,8 @@ const handleClose = () => {
 };
 
 const form = reactive({
-  address: "",
-  unit: ""
+  address: '',
+  unit: ''
 });
 watch(
   () => dialogVisible.value,
@@ -70,9 +67,9 @@ watch(
   }
 );
 
-const emit = defineEmits(["valueChange"]);
+const emit = defineEmits(['valueChange']);
 const handleConfirm = () => {
-  emit("valueChange", cloneDeep(form));
+  emit('valueChange', cloneDeep(form));
   handleClose();
 };
 </script>

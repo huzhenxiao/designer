@@ -1,5 +1,5 @@
-import { $ } from "./utils";
-import { mod360 } from "./translate";
+import { $ } from './utils';
+import { mod360 } from './translate';
 
 // 将Group中的组件拆分
 export function decomposeComponent(component, editorRect, parentStyle) {
@@ -7,7 +7,7 @@ export function decomposeComponent(component, editorRect, parentStyle) {
   // 获取元素的中心点坐标
   const componentCenter = {
     x: componentRect.left - editorRect.left + componentRect.width / 2,
-    y: componentRect.top - editorRect.top + componentRect.height / 2,
+    y: componentRect.top - editorRect.top + componentRect.height / 2
   };
   component.style.rotate.value = mod360(component.style.rotate.value + parentStyle.rotate.value);
   component.style.width.value =

@@ -6,11 +6,9 @@
     @click="selectCurComponent"
     @mousedown="handleMouseDownOnShape"
   >
-    <el-icon
-      class="el-icon-refresh-right"
-      v-show="isActive"
-      @mousedown="handleRotate"
-    ><refresh-right /></el-icon>
+    <el-icon class="el-icon-refresh-right" v-show="isActive" @mousedown="handleRotate"
+      ><refresh-right
+    /></el-icon>
     <i class="el-icon-lock" v-show="element.isLock && active"></i>
     <span
       class="shape-point"
@@ -24,42 +22,42 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import { useGetPointStyle } from "./useShape";
-import { throttle } from "utils/utils";
-import { mod360 } from "utils/translate";
-import calculateComponentPositonAndSize from "utils/calculateComponentPositonAndSize";
-import emitter from "utils/eventBus";
+import { ref, computed } from 'vue';
+import { useGetPointStyle } from './useShape';
+import { throttle } from 'utils/utils';
+import { mod360 } from 'utils/translate';
+import calculateComponentPositonAndSize from 'utils/calculateComponentPositonAndSize';
+import emitter from 'utils/eventBus';
 
-import { storeToRefs } from "pinia";
-import { useMainStore,useComposeStore,useSnapshotStore } from "@/store";
+import { storeToRefs } from 'pinia';
+import { useMainStore, useComposeStore, useSnapshotStore } from '@/store';
 
 export default {
   props: {
     active: {
       type: Boolean,
-      default: false,
+      default: false
     },
     element: {
       require: true,
-      type: Object,
+      type: Object
     },
     defaultStyle: {
       require: true,
-      type: Object,
+      type: Object
     },
     index: {
       require: true,
-      type: [Number, String],
-    },
+      type: [Number, String]
+    }
   },
   setup(props, context) {
     const mainStore = useMainStore();
     const composeStore = useComposeStore();
     const snapshotStore = useSnapshotStore();
-    const { curComponent,throttleDelay } = storeToRefs(mainStore);
+    const { curComponent, throttleDelay } = storeToRefs(mainStore);
     const { editor } = storeToRefs(composeStore);
-    
+
     const isActive = computed(() => props.active && !props.element.isLock);
     const shapeDom = ref(null);
     const { pointList, getCursor, getPointStyle } = useGetPointStyle();
@@ -67,12 +65,12 @@ export default {
     const selectCurComponent = (e) => {};
 
     const handleMouseDownOnShape = (e) => {
-      console.log("handleMouseDownOnShape");
+      console.log('handleMouseDownOnShape');
       e.stopPropagation();
       mainStore.setClickComponentStatus(true);
       mainStore.setCurComponent({
         component: props.element,
-        index: props.index,
+        index: props.index
       });
       if (props.element.isLock) return;
       getCursor(curComponent.value); // 根据旋转角度获取光标位置
@@ -87,8 +85,8 @@ export default {
       let disX = 0;
       let disY = 0;
       const move = (moveEvent) => {
-        console.log("shape mouse move");
-        
+        console.log('shape mouse move');
+
         hasMove = true;
         const curX = moveEvent.clientX;
         const curY = moveEvent.clientY;
@@ -98,9 +96,8 @@ export default {
         while (shapeDom.parentElement && !shapeDom.classList.contains('shape')) {
           shapeDom = shapeDom.parentElement;
         }
-        const rotate = pos.rotate.value
-        shapeDom.style.transform = `translateX(${disX}px) translateY(${disY}px) rotate(${rotate}deg)`
-        
+        const rotate = pos.rotate.value;
+        shapeDom.style.transform = `translateX(${disX}px) translateY(${disY}px) rotate(${rotate}deg)`;
       };
       const throttleMove = throttle(move, throttleDelay.value);
       const up = (e) => {
@@ -108,17 +105,17 @@ export default {
         pos.top.value = disY + startTop;
         mainStore.setShapeStyle(pos);
         hasMove && snapshotStore.recordSnapshot();
-        document.removeEventListener("mousemove", throttleMove);
-        document.removeEventListener("mouseup", up);
-        emitter.off("shapeMouseup", up);
+        document.removeEventListener('mousemove', throttleMove);
+        document.removeEventListener('mouseup', up);
+        emitter.off('shapeMouseup', up);
       };
-      emitter.on("shapeMouseup", up);
-      document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", throttleMove);
+      emitter.on('shapeMouseup', up);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('mousemove', throttleMove);
     };
 
     const isNeedLockProportion = () => {
-      if (props.element.component !== "Group") return false;
+      if (props.element.component !== 'Group') return false;
       const ratates = [0, 90, 180, 360];
       for (const component of props.element.propValue) {
         if (!ratates.includes(mod360(parseInt(component.style.rotate)))) {
@@ -139,18 +136,18 @@ export default {
       // 初始中心点
       const center = {
         x: style.left.value + style.width.value / 2,
-        y: style.top.value + style.height.value / 2,
+        y: style.top.value + style.height.value / 2
       };
       const rect = editor.value.getBoundingClientRect();
       // 当前点击坐标
       const curPoint = {
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        y: e.clientY - rect.top
       };
       // 对称点坐标
       const symmetricPoint = {
         x: 2 * center.x - curPoint.x,
-        y: 2 * center.y - curPoint.y,
+        y: 2 * center.y - curPoint.y
       };
       const needLockProportion = isNeedLockProportion();
 
@@ -160,7 +157,7 @@ export default {
         hasMove = true;
         const curPosition = {
           x: moveEvent.clientX - rect.left,
-          y: moveEvent.clientY - rect.top,
+          y: moveEvent.clientY - rect.top
         };
         calculateComponentPositonAndSize(
           point,
@@ -171,19 +168,19 @@ export default {
           {
             center,
             curPoint,
-            symmetricPoint,
+            symmetricPoint
           }
         );
-       mainStore.setShapeStyle(style);
+        mainStore.setShapeStyle(style);
       };
       const throttleMove = throttle(move, throttleDelay.value);
       const up = () => {
         hasMove && snapshotStore.recordSnapshot();
-        document.removeEventListener("mousemove", throttleMove);
-        document.removeEventListener("mouseup", up);
+        document.removeEventListener('mousemove', throttleMove);
+        document.removeEventListener('mouseup', up);
       };
-      document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", throttleMove);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('mousemove', throttleMove);
     };
 
     const handleRotate = (e) => {
@@ -202,8 +199,7 @@ export default {
       const centerY = rect.top + rect.height / 2;
 
       // 旋转前的角度
-      const rotateDegBefore =
-        (Math.atan2(startY - centerY, startX - centerX) * 180) / Math.PI;
+      const rotateDegBefore = (Math.atan2(startY - centerY, startX - centerX) * 180) / Math.PI;
 
       // 如果没有移动不保存快照，避免点击产生无效快照
       let hasMove = false;
@@ -211,8 +207,7 @@ export default {
         hasMove = true;
         const curY = moveEvent.clientY;
         const curX = moveEvent.clientX;
-        const rotateDegAfter =
-          (Math.atan2(curY - centerY, curX - centerX) * 180) / Math.PI;
+        const rotateDegAfter = (Math.atan2(curY - centerY, curX - centerX) * 180) / Math.PI;
 
         pos.rotate.value = rotateDegAfter - rotateDegBefore + startRotate;
         mainStore.setShapeStyle(pos);
@@ -220,12 +215,12 @@ export default {
       const throttleMove = throttle(move, throttleDelay.value);
       const up = () => {
         hasMove && snapshotStore.recordSnapshot();
-        document.removeEventListener("mousemove", throttleMove);
-        document.removeEventListener("mouseup", up);
+        document.removeEventListener('mousemove', throttleMove);
+        document.removeEventListener('mouseup', up);
         getCursor(curComponent.value);
       };
-      document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", throttleMove);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('mousemove', throttleMove);
     };
     // onMounted(() => {
     //   emitter.on("shapeMouseup", hideArea);
@@ -242,9 +237,9 @@ export default {
       handleMouseDownOnShape,
       handleMouseDownOnPoint,
       handleRotate,
-      getPointStyle,
+      getPointStyle
     };
-  },
+  }
 };
 </script>
 

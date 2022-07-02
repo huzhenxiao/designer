@@ -17,10 +17,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { getStyleExclude } from "utils/style";
-import { storeToRefs } from "pinia";
-import { useMainStore } from "@/store";
+import { ref } from 'vue';
+import { getStyleExclude } from 'utils/style';
+import { storeToRefs } from 'pinia';
+import { useMainStore } from '@/store';
+
 export default {
   props: {
     component: {
@@ -32,29 +33,27 @@ export default {
     console.log('============');
     console.log(props.component);
     const mainStore = useMainStore();
-    const {
-      editMode,
-    } = storeToRefs(mainStore);
-    
+    const { editMode } = storeToRefs(mainStore);
+
     const dialogVisible = ref(false);
-    const pageLink = ref("false");
+    const pageLink = ref('false');
     let clickTimer;
     const handleClick = () => {
       clearTimeout(clickTimer);
       clickTimer = setTimeout(() => {
         const { click } = props.component.events;
-        if(!click) return;
+        if (!click) return;
         if (!click.single || !click.single.value) return;
         const { action, pageOrLink, showType } = click.single;
-        if (action === "openPage") {
-        } else if (action === "openLink") {
-          if (showType === "page") {
-            window.open(pageOrLink, "_blank");
-          } else if (showType === "dialog") {
+        if (action === 'openPage') {
+        } else if (action === 'openLink') {
+          if (showType === 'page') {
+            window.open(pageOrLink, '_blank');
+          } else if (showType === 'dialog') {
             pageLink.value = pageOrLink;
             dialogVisible.value = true;
           }
-        } else if (action === "refresh") {
+        } else if (action === 'refresh') {
           location.reload();
         }
       }, 300);
@@ -62,22 +61,22 @@ export default {
     const handleDoubleClick = () => {
       clearTimeout(clickTimer);
       const { click } = props.component.events;
-      if(!click) return;
+      if (!click) return;
       if (!click.double || !click.double.value) return;
       const { action, pageOrLink, showType } = click.double;
-      if (action === "openPage") {
-      } else if (action === "openLink") {
-        if (showType === "page") {
-          window.open(pageOrLink, "_blank");
-        } else if (showType === "dialog") {
+      if (action === 'openPage') {
+      } else if (action === 'openLink') {
+        if (showType === 'page') {
+          window.open(pageOrLink, '_blank');
+        } else if (showType === 'dialog') {
           pageLink.value = pageOrLink;
           dialogVisible.value = true;
         }
-      } else if (action === "refresh") {
+      } else if (action === 'refresh') {
         location.reload();
       }
     };
-    const getStyle = style => getStyleExclude(style, []);
+    const getStyle = (style) => getStyleExclude(style, []);
 
     return {
       editMode,
@@ -95,7 +94,7 @@ export default {
 .component {
   position: absolute;
 }
-iframe{
+iframe {
   width: 100%;
   height: 80vh;
 }

@@ -2,29 +2,17 @@
   <div class="data-detail">
     <div class="content-wrap">
       <span class="label"
-        >数据详情<el-tooltip
-          effect="dark"
-          content="选中后预览时双击鼠标左键触发"
-          placement="top"
-        >
+        >数据详情<el-tooltip effect="dark" content="选中后预览时双击鼠标左键触发" placement="top">
           <el-icon><question-filled /></el-icon> </el-tooltip
       ></span>
       <div class="content">
-        <el-checkbox
-          v-model="props.data.value.showDetail"
-          label="显示"
-          :value="true"
-        />
+        <el-checkbox v-model="props.data.value.showDetail" label="显示" :value="true" />
       </div>
     </div>
     <div class="content-wrap">
       <span class="label">变量值单位</span>
       <div class="content">
-        <el-checkbox
-          v-model="props.data.value.showUnit"
-          label="显示"
-          :value="true"
-        />
+        <el-checkbox v-model="props.data.value.showUnit" label="显示" :value="true" />
       </div>
     </div>
   </div>

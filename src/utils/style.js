@@ -7,25 +7,25 @@
  * @FilePath: /my-designer/src/utils/style.js
  */
 
-import { cos, sin } from "./translate";
+import { cos, sin } from './translate';
 
 export function getStyleInclude(style = {}, contain = []) {
   const needUnit = [
-    "fontSize",
-    "lineHeight",
-    "width",
-    "height",
-    "top",
-    "left",
-    "borderWidth",
-    "letterSpacing",
-    "borderRadius",
+    'fontSize',
+    'lineHeight',
+    'width',
+    'height',
+    'top',
+    'left',
+    'borderWidth',
+    'letterSpacing',
+    'borderRadius'
   ];
 
   const result = {};
   Object.keys(style).forEach((key) => {
     if (contain.includes(key)) {
-      if (key !== "rotate") {
+      if (key !== 'rotate') {
         result[key] = needUnit.includes(key) ? `${style[key].value}px` : style[key].value;
       } else {
         result.transform = `${key}(${style[key].value}deg)`;
@@ -38,21 +38,21 @@ export function getStyleInclude(style = {}, contain = []) {
 
 export function getStyleExclude(style = {}, filter = []) {
   const needUnit = [
-    "fontSize",
-    "lineHeight",
-    "width",
-    "height",
-    "top",
-    "left",
-    "borderWidth",
-    "letterSpacing",
-    "borderRadius",
+    'fontSize',
+    'lineHeight',
+    'width',
+    'height',
+    'top',
+    'left',
+    'borderWidth',
+    'letterSpacing',
+    'borderRadius'
   ];
 
   const result = {};
   Object.keys(style).forEach((key) => {
     if (!filter.includes(key)) {
-      if (key !== "rotate") {
+      if (key !== 'rotate') {
         result[key] = needUnit.includes(key) ? `${style[key].value}px` : style[key].value;
       } else {
         result.transform = `${key}(${style[key].value}deg)`;

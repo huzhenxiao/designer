@@ -1,33 +1,33 @@
-import { reactive } from "vue";
-import { getPointList } from "@/apis";
+import { reactive } from 'vue';
+import { getPointList } from '@/apis';
 
 export default function usePointData() {
   const queryList = reactive({
-    isUnited: "",
+    isUnited: '',
     currentPage: 1,
     pageSize: 15,
-    search: "",
-    gatewayCode: "",
-    gatewayCodeSymbol: "",
-    gatewayName: "",
-    gatewayNameSymbol: "",
-    name: "",
-    nameSymbol: "",
-    code: "",
-    codeSymbol: "like",
-    facName: "",
-    time: "",
-    timeSign: "",
-    starttime: "",
-    endtime: "",
-    online: "",
-    onlineSymbol: "",
-    type: "",
-    typeSymbol: "",
-    tag: "",
-    ctrType: "",
-    categoryName: "",
-    selectedId: ""
+    search: '',
+    gatewayCode: '',
+    gatewayCodeSymbol: '',
+    gatewayName: '',
+    gatewayNameSymbol: '',
+    name: '',
+    nameSymbol: '',
+    code: '',
+    codeSymbol: 'like',
+    facName: '',
+    time: '',
+    timeSign: '',
+    starttime: '',
+    endtime: '',
+    online: '',
+    onlineSymbol: '',
+    type: '',
+    typeSymbol: '',
+    tag: '',
+    ctrType: '',
+    categoryName: '',
+    selectedId: ''
   });
   const tableData = reactive({
     list: [],
@@ -60,7 +60,7 @@ export default function usePointData() {
       typeSymbol: queryList.typeSymbol,
       tag: queryList.tag,
       ctrType: queryList.ctrType
-    }).then(res => {
+    }).then((res) => {
       if (res && res.result) {
         tableData.list = res.result.list || [];
         tableData.total = res.result.total;

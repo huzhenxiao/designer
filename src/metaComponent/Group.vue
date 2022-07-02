@@ -16,22 +16,23 @@
 </template>
 
 <script>
-import {computed} from 'vue';
-import { getStyleExclude } from "utils/style";
-import { toPercent } from "utils/translate";
+import { computed } from 'vue';
+import { getStyleExclude } from 'utils/style';
+import { toPercent } from 'utils/translate';
+
 export default {
   props: {
     propValue: {
-      require:true,
+      require: true
     },
     element: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   setup(props, context) {
-    const children = computed(()=>props.element.children);
+    const children = computed(() => props.element.children);
     const parentStyle = props.element.style;
-    
+
     props.element.children.forEach((component) => {
       // component.groupStyle的top、left是相对于group组件的位置
       // 如果已存在component.groupStyle,说明已经计算过一次了，不需要再次计算
@@ -45,14 +46,12 @@ export default {
           (style.top.value - parentStyle.top.value) / parentStyle.height.value
         );
         component.groupStyle.width = toPercent(style.width.value / parentStyle.width.value);
-        component.groupStyle.height = toPercent(
-          style.height.value / parentStyle.height.value
-        );
+        component.groupStyle.height = toPercent(style.height.value / parentStyle.height.value);
       }
     });
 
-    return {children};
-  },
+    return { children };
+  }
 };
 </script>
 

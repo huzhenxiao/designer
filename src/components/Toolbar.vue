@@ -1,50 +1,28 @@
 <template>
   <div class="toolbar">
-    <el-button @click="undo" :disabled="snapshotIndex === -1" size="small"
-      >撤消</el-button
-    >
-    <el-button
-      @click="redo"
-      :disabled="snapshotIndex === snapshotData.length - 1"
-      size="small"
+    <el-button @click="undo" :disabled="snapshotIndex === -1" size="small">撤消</el-button>
+    <el-button @click="redo" :disabled="snapshotIndex === snapshotData.length - 1" size="small"
       >重做</el-button
     >
     <!-- <label for="input" class="insert">插入图片</label> -->
     <!-- <input type="file" @change="handleFileChange" id="input" hidden /> -->
     <el-button @click="clearCanvas" size="small">清空画布</el-button>
-    <el-button @click="setTop" :disabled="!curComponent" size="small"
-      >置顶</el-button
-    >
-    <el-button @click="setBottom" :disabled="!curComponent" size="small"
-      >置底</el-button
-    >
-    <el-button
-      @click="compose"
-      :disabled="areaData.components.length < 2"
-      size="small"
+    <el-button @click="setTop" :disabled="!curComponent" size="small">置顶</el-button>
+    <el-button @click="setBottom" :disabled="!curComponent" size="small">置底</el-button>
+    <el-button @click="compose" :disabled="areaData.components.length < 2" size="small"
       >组合</el-button
     >
     <el-button
       @click="decompose"
-      :disabled="
-        !curComponent ||
-        curComponent.isLock ||
-        curComponent.component !== 'group'
-      "
+      :disabled="!curComponent || curComponent.isLock || curComponent.component !== 'group'"
       size="small"
       >拆分</el-button
     >
 
-    <el-button
-      @click="lock"
-      :disabled="!curComponent || curComponent.isLock"
-      size="small"
+    <el-button @click="lock" :disabled="!curComponent || curComponent.isLock" size="small"
       >锁定</el-button
     >
-    <el-button
-      @click="unlock"
-      :disabled="!curComponent || !curComponent.isLock"
-      size="small"
+    <el-button @click="unlock" :disabled="!curComponent || !curComponent.isLock" size="small"
       >解锁</el-button
     >
     <div class="canvas-config">
@@ -71,11 +49,7 @@
     </div>
     <div class="canvas-config">
       <span class="label">缩放</span>
-      <el-select
-        :modelValue="canvasStyleData.scale"
-        @change="handleScaleChange"
-        size="small"
-      >
+      <el-select :modelValue="canvasStyleData.scale" @change="handleScaleChange" size="small">
         <el-option
           v-for="item in scaleOptions"
           :key="item.value"
@@ -91,48 +65,49 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+import { computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { deepClone } from 'utils/utils';
 import {
   useMainStore,
   useComposeStore,
   useSnapshotStore,
   useLockStore,
-  useLayerStore,
-} from "@/store";
-import { deepClone } from "utils/utils";
+  useLayerStore
+} from '@/store';
+
 export default {
   setup() {
     const scaleOptions = [
       {
-        label: "50%",
-        value: 50,
+        label: '50%',
+        value: 50
       },
       {
-        label: "75%",
-        value: 75,
+        label: '75%',
+        value: 75
       },
       {
-        label: "100%",
-        value: 100,
+        label: '100%',
+        value: 100
       },
       {
-        label: "125%",
-        value: 125,
+        label: '125%',
+        value: 125
       },
       {
-        label: "150%",
-        value: 150,
+        label: '150%',
+        value: 150
       },
       {
-        label: "200%",
-        value: 200,
+        label: '200%',
+        value: 200
       },
       {
-        label: "300%",
-        value: 300,
-      },
+        label: '300%',
+        value: 300
+      }
     ];
     const mainStore = useMainStore();
     const composeStore = useComposeStore();
@@ -140,9 +115,7 @@ export default {
     const lockStore = useLockStore();
     const layerStore = useLayerStore();
 
-    const { curComponent, componentData, canvasStyleData } = storeToRefs(
-      mainStore
-    );
+    const { curComponent, componentData, canvasStyleData } = storeToRefs(mainStore);
     const { areaData } = storeToRefs(composeStore);
     const { snapshotData, snapshotIndex } = storeToRefs(snapshotStore);
     const router = useRouter();
@@ -189,26 +162,26 @@ export default {
     };
 
     const preview = () => {
-      mainStore.setEditMode("preview");
+      mainStore.setEditMode('preview');
       const routeUrl = router.resolve({
-        path: "/preview",
+        path: '/preview'
       });
       sessionStorage.setItem(
-        "canvasData",
+        'canvasData',
         JSON.stringify({
           componentData: componentData.value,
-          canvasStyleData: canvasStyleData.value,
+          canvasStyleData: canvasStyleData.value
         })
       );
-      window.open(routeUrl.href, "_blank");
+      window.open(routeUrl.href, '_blank');
     };
 
     const save = () => {
       sessionStorage.setItem(
-        "canvasData",
+        'canvasData',
         JSON.stringify({
           componentData: componentData.value,
-          canvasStyleData: canvasStyleData.value,
+          canvasStyleData: canvasStyleData.value
         })
       );
     };
@@ -218,36 +191,31 @@ export default {
     };
 
     const needToChangeStyle = [
-      "top",
-      "left",
-      "width",
-      "height",
-      "fontSize",
-      "borderWidth",
-      "lineHeight",
-      "borderRadius",
+      'top',
+      'left',
+      'width',
+      'height',
+      'fontSize',
+      'borderWidth',
+      'lineHeight',
+      'borderRadius'
     ];
     const getScaleValue = (oldValue, newScale) =>
-      ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) *
-        parseInt(newScale)) /
-      100;
+      ((oldValue / (parseInt(canvasStyleData.value.scale) / 100)) * parseInt(newScale)) / 100;
     const handleScaleChange = (newScale) => {
       newScale = newScale || canvasStyleData.value.scale;
       const newComponentData = deepClone(componentData.value);
       newComponentData.forEach((component) => {
         Object.keys(component.style).forEach((key) => {
           if (needToChangeStyle.includes(key)) {
-            component.style[key].value = getScaleValue(
-              component.style[key].value,
-              newScale
-            );
+            component.style[key].value = getScaleValue(component.style[key].value, newScale);
           }
         });
       });
       mainStore.setComponentData(newComponentData);
       mainStore.setCanvasStyleDataByKey({
-        key: "scale",
-        value: newScale,
+        key: 'scale',
+        value: newScale
       });
     };
 
@@ -270,9 +238,9 @@ export default {
       save,
       scaleOptions,
       snapshotData,
-      snapshotIndex,
+      snapshotIndex
     };
-  },
+  }
 };
 </script>
 

@@ -7,19 +7,20 @@
 </template>
 
 <script setup>
-import {  ref, onMounted, onUnmounted } from "vue";
-import dayjs from "dayjs";
+import { ref, onMounted, onUnmounted } from 'vue';
+import dayjs from 'dayjs';
+
 const props = defineProps({
   element: {
     type: Object
   }
 });
-const time = ref("");
+const time = ref('');
 let timer;
 onMounted(() => {
-  time.value = dayjs().format("YYYY-MM-DD HH:mm:ss");
+  time.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
   timer = setInterval(() => {
-    time.value = dayjs().format("YYYY-MM-DD HH:mm:ss");
+    time.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
   }, 1000);
 });
 onUnmounted(() => {

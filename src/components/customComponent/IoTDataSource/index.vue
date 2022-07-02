@@ -34,12 +34,7 @@
       <div class="condition">
         <el-row :gutter="20">
           <el-col :span="4"
-            ><el-select
-              v-model="value"
-              class="select"
-              placeholder="请选择分组"
-              size="small"
-            >
+            ><el-select v-model="value" class="select" placeholder="请选择分组" size="small">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -48,12 +43,7 @@
               /> </el-select
           ></el-col>
           <el-col :span="4"
-            ><el-select
-              v-model="value"
-              class="select"
-              placeholder="请选择设备"
-              size="small"
-            >
+            ><el-select v-model="value" class="select" placeholder="请选择设备" size="small">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -62,12 +52,7 @@
               /> </el-select
           ></el-col>
           <el-col :span="4"
-            ><el-select
-              v-model="value"
-              class="select"
-              placeholder="请选择网关"
-              size="small"
-            >
+            ><el-select v-model="value" class="select" placeholder="请选择网关" size="small">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -76,12 +61,7 @@
               /> </el-select
           ></el-col>
           <el-col :span="4"
-            ><el-select
-              v-model="value"
-              class="select"
-              placeholder="请选择控制类型"
-              size="small"
-            >
+            ><el-select v-model="value" class="select" placeholder="请选择控制类型" size="small">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -101,42 +81,14 @@
         </el-row>
       </div>
       <el-scrollbar height="600px">
-        <el-table
-          ref="tableRef"
-          :data="tableData.list"
-          @select="handleSelectionChange"
-        >
+        <el-table ref="tableRef" :data="tableData.list" @select="handleSelectionChange">
           <el-table-column type="selection" width="55" />
-          <el-table-column
-            prop="name"
-            label="点位名称"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="code"
-            label="所属设备"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="gatewayName"
-            label="网关名称"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="code"
-            label="点位编码"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="type"
-            label="点位类型"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="ctrType"
-            label="点位类型"
-            align="center"
-          ></el-table-column>
+          <el-table-column prop="name" label="点位名称" align="center"></el-table-column>
+          <el-table-column prop="code" label="所属设备" align="center"></el-table-column>
+          <el-table-column prop="gatewayName" label="网关名称" align="center"></el-table-column>
+          <el-table-column prop="code" label="点位编码" align="center"></el-table-column>
+          <el-table-column prop="type" label="点位类型" align="center"></el-table-column>
+          <el-table-column prop="ctrType" label="点位类型" align="center"></el-table-column>
         </el-table>
       </el-scrollbar>
       <el-pagination
@@ -160,16 +112,16 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from "vue";
-import usePointData from "./usePointData";
+import { ref, reactive, onMounted, watch } from 'vue';
+import usePointData from './usePointData';
 const props = defineProps({
   data: {
     require: true
-  },
+  }
 });
 
-const pointSelect = ref("");
-const tableRef = ref("");
+const pointSelect = ref('');
+const tableRef = ref('');
 const options = reactive([]);
 const dialogVisible = ref(false);
 
@@ -184,7 +136,7 @@ watch(
   (dialogVisible, prevDialogVisible) => {
     if (dialogVisible) {
       getPointData().then(() => {
-        tableData.list.forEach(item => {
+        tableData.list.forEach((item) => {
           if (item.code === props.data.value) {
             tableRef.value.toggleRowSelection(item, true);
           }
@@ -201,9 +153,9 @@ const handleSelectionChange = (selection, row) => {
   tableRef.value.toggleRowSelection(row, true);
 };
 
-const emit = defineEmits(["valueChange"]);
+const emit = defineEmits(['valueChange']);
 const handleConfirm = () => {
-  emit("valueChange", selections[0] ? selections[0].code : "");
+  emit('valueChange', selections[0] ? selections[0].code : '');
   handleClose();
 };
 const handleClose = () => {

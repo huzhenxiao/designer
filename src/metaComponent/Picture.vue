@@ -1,6 +1,6 @@
 <template>
   <div class="picture">
-    <img :src="propValue.value" draggable="false"/>
+    <img :src="propValue.value" draggable="false" />
   </div>
 </template>
 
@@ -9,12 +9,12 @@ export default {
   props: {
     propValue: {
       type: Object,
-      require: true,
-    },
+      require: true
+    }
   },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 

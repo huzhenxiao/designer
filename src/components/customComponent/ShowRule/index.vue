@@ -3,12 +3,7 @@
     <div class="content">
       <span class="label">{{ props.data.label }}</span>
       <div class="content">
-        <el-select
-          v-model="props.data.value"
-          class="select"
-          placeholder="请选择"
-          size="small"
-        >
+        <el-select v-model="props.data.value" class="select" placeholder="请选择" size="small">
           <el-option
             v-for="item in props.options"
             :key="item.value"
@@ -68,11 +63,7 @@
                   ></el-input>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="content"
-                label="请填写对应的翻译内容"
-                align="center"
-              >
+              <el-table-column prop="content" label="请填写对应的翻译内容" align="center">
                 <template #default="scope">
                   <el-input
                     size="small"
@@ -83,18 +74,12 @@
               </el-table-column>
               <el-table-column prop="color" label="字体颜色" align="center">
                 <template #default="scope">
-                  <el-color-picker
-                    show-alpha
-                    v-model="scope.row.textcolor"
-                  ></el-color-picker>
+                  <el-color-picker show-alpha v-model="scope.row.textcolor"></el-color-picker>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center">
                 <template #default="scope">
-                  <el-button
-                    type="danger"
-                    size="small"
-                    @click="delRow('platform', scope.$index)"
+                  <el-button type="danger" size="small" @click="delRow('platform', scope.$index)"
                     >删除</el-button
                   >
                 </template>
@@ -129,40 +114,26 @@
                   ></el-input-number>
                 </template>
               </el-table-column>
-              <el-table-column
-                prop="content"
-                label="请填写对应的翻译内容"
-                align="center"
-              >
+              <el-table-column prop="content" label="请填写对应的翻译内容" align="center">
                 <template #default="scope">
                   <el-input size="small" v-model="scope.row.content"></el-input>
                 </template>
               </el-table-column>
               <el-table-column prop="color" label="字体颜色" align="center">
                 <template #default="scope">
-                  <el-color-picker
-                    show-alpha
-                    v-model="scope.row.textcolor"
-                  ></el-color-picker>
+                  <el-color-picker show-alpha v-model="scope.row.textcolor"></el-color-picker>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center">
                 <template #default="scope">
-                  <el-button
-                    type="danger"
-                    size="small"
-                    @click="delRow('custom', scope.$index)"
+                  <el-button type="danger" size="small" @click="delRow('custom', scope.$index)"
                     >删除</el-button
                   >
                 </template>
               </el-table-column>
             </el-table>
             <div class="wrap-add-btn">
-              <el-button
-                type="primary"
-                size="small"
-                class="addRow"
-                @click="addRow"
+              <el-button type="primary" size="small" class="addRow" @click="addRow"
                 >添加一条</el-button
               >
             </div>
@@ -180,9 +151,9 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import cloneDeep from "lodash/cloneDeep";
-import useRules from "./useRules";
+import { ref, reactive } from 'vue';
+import cloneDeep from 'lodash/cloneDeep';
+import useRules from './useRules';
 const props = defineProps({
   data: {
     require: true
@@ -197,8 +168,8 @@ const props = defineProps({
     default: () => []
   }
 });
-console.log("props.data", props.data);
-console.log("businessData", props.businessData);
+console.log('props.data', props.data);
+console.log('businessData', props.businessData);
 
 const ruleEditDialog = ref(false);
 const activeTab = ref(props.data.value);
@@ -207,12 +178,9 @@ const { platformRules, customRules, initData, addRow, delRow } = useRules();
 
 const handleOpenRuleEditDialog = () => {
   if (!props.data.value) {
-    return ElMessage("请选择展示规则类型");
-  } else if (
-    props.data.value === "platform" &&
-    !props.businessData.IoTdataSource.value
-  ) {
-    return ElMessage("请选择点位");
+    return ElMessage('请选择展示规则类型');
+  } else if (props.data.value === 'platform' && !props.businessData.IoTdataSource.value) {
+    return ElMessage('请选择点位');
   } else {
     activeTab.value = props.data.value;
     ruleEditDialog.value = true;

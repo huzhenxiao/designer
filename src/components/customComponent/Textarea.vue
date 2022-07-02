@@ -1,4 +1,3 @@
-
 <template>
   <div class="custom-textarea">
     <CustomComponentItem :label="label" :unit="unit">
@@ -7,7 +6,7 @@
         @input="handleChange"
         @change="handleChange"
         type="textarea"
-        :autosize="{ minRows: 2, maxRows:10}"
+        :autosize="{ minRows: 2, maxRows: 10 }"
         size="small"
       ></el-input>
     </CustomComponentItem>
@@ -15,26 +14,26 @@
 </template>
 
 <script>
-import CustomComponentItem from "comps/CustomComponentItem.vue";
+import CustomComponentItem from 'comps/CustomComponentItem.vue';
 export default {
   components: {
-    CustomComponentItem,
+    CustomComponentItem
   },
   props: {
     label: String,
     unit: String,
     value: {
-      require: true,
-    },
+      require: true
+    }
   },
   setup(props, { emit }) {
     const handleChange = (value) => {
-      emit("valueChange", value);
+      emit('valueChange', value);
     };
     return {
-      handleChange,
+      handleChange
     };
-  },
+  }
 };
 </script>
 

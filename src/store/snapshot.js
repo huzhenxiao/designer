@@ -1,16 +1,15 @@
-import { deepClone } from "utils/utils";
-import { defineStore } from "pinia";
-import { useMainStore } from "./main";
+import { deepClone } from 'utils/utils';
+import { defineStore } from 'pinia';
+import { useMainStore } from './main';
+
 const mainStore = useMainStore();
 
 export const useSnapshotStore = defineStore({
-  id: "snapshot",
-  state: () => {
-    return {
-      snapshotData: [],
-      snapshotIndex: -1
-    };
-  },
+  id: 'snapshot',
+  state: () => ({
+    snapshotData: [],
+    snapshotIndex: -1
+  }),
   actions: {
     recordSnapshot() {
       this.snapshotData[++this.snapshotIndex] = deepClone(mainStore.componentData);

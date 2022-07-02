@@ -1,16 +1,16 @@
-import { ref, reactive } from "vue";
-import { getStyleInclude, getStyleExclude } from "utils/style";
+import { ref, reactive } from 'vue';
+import { getStyleInclude, getStyleExclude } from 'utils/style';
 
 export const useGetStyle = () => {
   const getShapeStyle = (style) =>
-    getStyleInclude(style, ["width", "height", "top", "left", "rotate"]);
+    getStyleInclude(style, ['width', 'height', 'top', 'left', 'rotate']);
 
   const getComponentStyle = (style) =>
-    getStyleExclude(style, ["top", "left", "width", "height", "rotate"]);
+    getStyleExclude(style, ['top', 'left', 'width', 'height', 'rotate']);
 
   return {
     getShapeStyle,
-    getComponentStyle,
+    getComponentStyle
   };
 };
 
@@ -19,7 +19,7 @@ export const useGetArea = () => {
   const areaHeight = ref(0);
   const areaStart = reactive({
     x: 0,
-    y: 0,
+    y: 0
   });
   const areaIsShow = ref(false);
 
@@ -33,6 +33,6 @@ export const useGetArea = () => {
     areaHeight,
     areaStart,
     areaIsShow,
-    hideArea,
+    hideArea
   };
 };

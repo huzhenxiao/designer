@@ -3,7 +3,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "lint": "eslint src/**/*.{js,vue} --fix",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{vue,js}": "eslint --fix"
   },
   "dependencies": {
     "@antv/x6": "^1.25.5",
@@ -20,7 +25,18 @@
     "vue-router": "4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@vitejs/plugin-vue": "^1.10.2",
+    "eslint": "^7.32.0 || ^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.1.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
     "sass": "^1.35.1",
     "unplugin-auto-import": "^0.6.9",
     "unplugin-vue-components": "^0.18.5",

@@ -5,7 +5,7 @@
       width: `${width}px`,
       height: `${height}px`,
       left: `${start.x}px`,
-      top: `${start.y}px`,
+      top: `${start.y}px`
     }"
   ></div>
 </template>
@@ -14,18 +14,18 @@
 export default {
   props: {
     start: {
-      type: Object,
+      type: Object
     },
     width: {
-      type: Number,
+      type: Number
     },
     height: {
-      type: Number,
-    },
+      type: Number
+    }
   },
   setup() {
     return {};
-  },
+  }
 };
 </script>
 

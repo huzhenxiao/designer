@@ -1,8 +1,8 @@
-import { reactive, onMounted } from "vue";
-import { mod360 } from "utils/translate";
+import { reactive, onMounted } from 'vue';
+import { mod360 } from 'utils/translate';
 
 // 八个角
-const pointList = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
+const pointList = ['lt', 't', 'rt', 'r', 'rb', 'b', 'lb', 'l'];
 
 // 每个点对应的初始角度
 const initialAngle = {
@@ -13,19 +13,19 @@ const initialAngle = {
   rb: 180,
   b: 225,
   lb: 270,
-  l: 315,
+  l: 315
 };
 
 // 每个范围的角度对应的光标
 const angleToCursor = [
-  { start: 338, end: 23, cursor: "nw" },
-  { start: 23, end: 68, cursor: "n" },
-  { start: 68, end: 113, cursor: "ne" },
-  { start: 113, end: 158, cursor: "e" },
-  { start: 158, end: 203, cursor: "se" },
-  { start: 203, end: 248, cursor: "s" },
-  { start: 248, end: 293, cursor: "sw" },
-  { start: 293, end: 338, cursor: "w" },
+  { start: 338, end: 23, cursor: 'nw' },
+  { start: 23, end: 68, cursor: 'n' },
+  { start: 68, end: 113, cursor: 'ne' },
+  { start: 113, end: 158, cursor: 'e' },
+  { start: 158, end: 203, cursor: 'se' },
+  { start: 203, end: 248, cursor: 's' },
+  { start: 248, end: 293, cursor: 'sw' },
+  { start: 293, end: 338, cursor: 'w' }
 ];
 
 export const useGetPointStyle = () => {
@@ -55,10 +55,10 @@ export const useGetPointStyle = () => {
       }
     }
     const style = {
-      transform: "translateX(-50%) translateY(-50%)",
+      transform: 'translateX(-50%) translateY(-50%)',
       left: `${newLeft}px`,
       top: `${newTop}px`,
-      cursor: cursors[point],
+      cursor: cursors[point]
     };
     return style;
   };
@@ -73,7 +73,7 @@ export const useGetPointStyle = () => {
         len++;
         const angleLimit = angleToCursor[len];
         if (angle >= 338 || angle < 23) {
-          return (cursors[point] = "nw-resize");
+          return (cursors[point] = 'nw-resize');
         }
         if (angleLimit.start <= angle && angleLimit.end > angle) {
           return (cursors[point] = `${angleLimit.cursor}-resize`);
@@ -89,6 +89,6 @@ export const useGetPointStyle = () => {
   return {
     pointList,
     getCursor,
-    getPointStyle,
+    getPointStyle
   };
 };

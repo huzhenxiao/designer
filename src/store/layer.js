@@ -1,12 +1,10 @@
-import { defineStore } from "pinia";
-import { swap } from "utils/utils";
-import { useMainStore } from "./main";
+import { defineStore } from 'pinia';
+import { swap } from 'utils/utils';
+import { useMainStore } from './main';
 
 export const useLayerStore = defineStore({
-  id: "layer",
-  state: () => {
-    return {};
-  },
+  id: 'layer',
+  state: () => ({}),
   actions: {
     setTopComponent() {
       const { componentData, curComponentIndex } = useMainStore();
@@ -33,6 +31,6 @@ export const useLayerStore = defineStore({
       if (curComponentIndex === 0) return;
       swap(componentData, curComponentIndex, curComponentIndex - 1);
       useMainStore().curComponentIndex = curComponentIndex - 1;
-    },
-  },
+    }
+  }
 });

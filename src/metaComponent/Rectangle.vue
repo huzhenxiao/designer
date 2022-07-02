@@ -8,12 +8,12 @@
 export default {
   props: {
     element: {
-      type: Object,
-    },
+      type: Object
+    }
   },
-  setup() { 
+  setup() {
     return {};
-  },
+  }
 };
 </script>
 

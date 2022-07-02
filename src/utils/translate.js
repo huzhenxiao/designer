@@ -7,7 +7,7 @@ export function mod360(deg) {
 }
 
 export function toPercent(value) {
-  return value * 100 + "%";
+  return `${value * 100}%`;
 }
 
 /**
@@ -22,7 +22,7 @@ export function angleToRadian(angle) {
 export function getCenterPoint(p1, p2) {
   return {
     x: (p1.x + p2.x) / 2,
-    y: (p1.y + p2.y) / 2,
+    y: (p1.y + p2.y) / 2
   };
 }
 
@@ -51,7 +51,7 @@ export function calculateRotatedPointCoordinate(point, center, rotate) {
     y:
       Math.sin(angleToRadian(rotate)) * (point.x - center.x) +
       Math.cos(angleToRadian(rotate)) * (point.y - center.y) +
-      center.y,
+      center.y
   };
 }
 

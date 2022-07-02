@@ -1,4 +1,3 @@
-
 <template>
   <div class="custom-select">
     <CustomComponentItem :label="label" :unit="unit">
@@ -7,7 +6,8 @@
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
+          :value="item.value"
+        >
         </el-option>
       </el-select>
     </CustomComponentItem>
@@ -15,32 +15,32 @@
 </template>
 
 <script>
-import CustomComponentItem from "comps/CustomComponentItem.vue";
+import CustomComponentItem from 'comps/CustomComponentItem.vue';
 export default {
   components: {
-    CustomComponentItem,
+    CustomComponentItem
   },
   props: {
     label: String,
     unit: String,
     value: {
-      require: true,
+      require: true
     },
-    options:{
+    options: {
       require: true,
-      type:Array
+      type: Array
     }
   },
   setup(props, { emit }) {
-    console.log('props',props);
-    
+    console.log('props', props);
+
     const handleChange = (value) => {
-      emit("valueChange", value);
+      emit('valueChange', value);
     };
     return {
-      handleChange,
+      handleChange
     };
-  },
+  }
 };
 </script>
 

@@ -4,14 +4,8 @@
     id="editor"
     :class="{ edit: isEdit }"
     :style="{
-      width: `${changeStyleWithScale(
-        canvasStyleData.width,
-        canvasStyleData.scale
-      )}px`,
-      height: `${changeStyleWithScale(
-        canvasStyleData.height,
-        canvasStyleData.scale
-      )}px`
+      width: `${changeStyleWithScale(canvasStyleData.width, canvasStyleData.scale)}px`,
+      height: `${changeStyleWithScale(canvasStyleData.height, canvasStyleData.scale)}px`
     }"
     @mousedown="handleMouseDownOnEditor"
     @contextmenu="handleContextMenu"
@@ -44,29 +38,24 @@
     <!-- 右键菜单 -->
     <ContextMenu />
     <!-- 选中区域 -->
-    <Area
-      v-show="areaIsShow"
-      :width="areaWidth"
-      :height="areaHeight"
-      :start="areaStart"
-    />
+    <Area v-show="areaIsShow" :width="areaWidth" :height="areaHeight" :start="areaStart" />
   </div>
 </template>
 
 <script>
-import { ref, computed, onMounted, reactive, onBeforeUnmount } from "vue";
-import { changeStyleWithScale } from "utils/translate";
-import { getStyleExclude, getComponentRotatedStyle } from "utils/style";
-import { throttle } from "utils/utils";
-import Grid from "./Grid.vue";
-import Shape from "./Shape.vue";
-import Area from "./Area.vue";
-import ContextMenu from "./ContextMenu.vue";
-import { useGetStyle, useGetArea } from "./useEditor";
-import { $ } from "utils/utils";
-import emitter from "utils/eventBus";
-import { storeToRefs } from "pinia";
-import { useMainStore, useComposeStore, useContextmenuStore } from "@/store";
+import { ref, computed, onMounted, reactive, onBeforeUnmount } from 'vue';
+import { changeStyleWithScale } from 'utils/translate';
+import { getStyleExclude, getComponentRotatedStyle } from 'utils/style';
+import { throttle } from 'utils/utils';
+import Grid from './Grid.vue';
+import Shape from './Shape.vue';
+import Area from './Area.vue';
+import ContextMenu from './ContextMenu.vue';
+import { useGetStyle, useGetArea } from './useEditor';
+import { $ } from 'utils/utils';
+import emitter from 'utils/eventBus';
+import { storeToRefs } from 'pinia';
+import { useMainStore, useComposeStore, useContextmenuStore } from '@/store';
 
 export default {
   components: {
@@ -80,30 +69,19 @@ export default {
     const mainStore = useMainStore();
     const composeStore = useComposeStore();
     const contextmenuStore = useContextmenuStore();
-    const {
-      editMode,
-      componentData,
-      canvasStyleData,
-      curComponent,
-      throttleDelay,
-    } = storeToRefs(mainStore);
+    const { editMode, componentData, canvasStyleData, curComponent, throttleDelay } =
+      storeToRefs(mainStore);
     const { editor } = storeToRefs(composeStore);
 
     const { getShapeStyle, getComponentStyle } = useGetStyle();
 
-    const {
-      areaWidth,
-      areaHeight,
-      areaStart,
-      areaIsShow,
-      hideArea
-    } = useGetArea();
+    const { areaWidth, areaHeight, areaStart, areaIsShow, hideArea } = useGetArea();
 
     let editorX = 0;
     let editorY = 0;
 
-    const handleMouseDownOnEditor = e => {
-      console.log("handleMouseDownOnEditor");
+    const handleMouseDownOnEditor = (e) => {
+      console.log('handleMouseDownOnEditor');
 
       // 如果没有选中组件 在画布上点击时需要调用 e.preventDefault() 防止触发 drop 事件
       if (!curComponent.value) {
@@ -121,8 +99,8 @@ export default {
       areaStart.y = startY - editorY;
       areaIsShow.value = true;
 
-      const move = moveEvent => {
-        console.log("editor mouse move");
+      const move = (moveEvent) => {
+        console.log('editor mouse move');
         areaWidth.value = Math.abs(moveEvent.clientX - startX);
         areaHeight.value = Math.abs(moveEvent.clientY - startY);
         if (moveEvent.clientX < startX) {
@@ -133,17 +111,17 @@ export default {
         }
       };
       const throttleMove = throttle(move, throttleDelay.value);
-      const up = e => {
-        document.removeEventListener("mousemove", throttleMove);
-        document.removeEventListener("mouseup", up);
+      const up = (e) => {
+        document.removeEventListener('mousemove', throttleMove);
+        document.removeEventListener('mouseup', up);
 
         if (e.clientX === startX && e.clientY === startY) {
           return hideArea();
         }
         createGroup();
       };
-      document.addEventListener("mouseup", up);
-      document.addEventListener("mousemove", throttleMove);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('mousemove', throttleMove);
     };
 
     function createGroup() {
@@ -155,10 +133,10 @@ export default {
         left = Infinity,
         right = -Infinity,
         bottom = -Infinity;
-      areaData.forEach(component => {
+      areaData.forEach((component) => {
         let style = {};
-        if (component.component === "Group") {
-          component.propValue.forEach(item => {
+        if (component.component === 'Group') {
+          component.propValue.forEach((item) => {
             const rectInfo = $(`#component${item.id}`).getBoundingClientRect();
             style.left = rectInfo.left - editorX;
             style.top = rectInfo.top - editorY;
@@ -200,7 +178,7 @@ export default {
       const result = [];
       const { x, y } = areaStart;
 
-      componentData.value.forEach(component => {
+      componentData.value.forEach((component) => {
         if (component.isLock) return;
         const { left, top, width, height } = component.style;
         if (
@@ -215,8 +193,8 @@ export default {
       return result;
     }
 
-    const handleContextMenu = e => {
-      console.log("handleContextMenu");
+    const handleContextMenu = (e) => {
+      console.log('handleContextMenu');
       e.stopPropagation();
       e.preventDefault();
       const rectInfo = editor.value.getBoundingClientRect();
@@ -232,12 +210,12 @@ export default {
 
     onMounted(() => {
       composeStore.getEditor();
-      emitter.on("hideArea", hideArea);
+      emitter.on('hideArea', hideArea);
     });
     onBeforeUnmount(() => {
-      emitter.off("hideArea", hideArea);
+      emitter.off('hideArea', hideArea);
     });
-  
+
     return {
       isEdit,
       editMode,

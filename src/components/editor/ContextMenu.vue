@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { storeToRefs } from "pinia";
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import {
   useMainStore,
   useContextmenuStore,
@@ -33,7 +33,7 @@ import {
   useLockStore,
   useSnapshotStore,
   useLayerStore
-} from "@/store";
+} from '@/store';
 export default {
   setup() {
     const mainStore = useMainStore();
@@ -44,16 +44,16 @@ export default {
     const { curComponent } = storeToRefs(mainStore);
     const { menuShow, menuLeft, menuTop } = storeToRefs(useContextmenuStore());
 
-    const handleMouseUp = e => {
+    const handleMouseUp = (e) => {
       mainStore.setClickComponentStatus(true);
     };
-    const lock = e => {
+    const lock = (e) => {
       lockStore.lock();
     };
-    const unlock = e => {
+    const unlock = (e) => {
       lockStore.unlock();
     };
-    const deleteComponent = e => {
+    const deleteComponent = (e) => {
       mainStore.deleteComponent();
       snapshotStore.recordSnapshot();
     };

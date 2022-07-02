@@ -1,4 +1,4 @@
-import logo from "assets/logo.png";
+import logo from 'assets/logo.png';
 import {
   selectCreater,
   leftCreater,
@@ -27,8 +27,8 @@ import {
   lineColorCreater,
   textareaCreater,
   eventsCreater,
-  IoTdataSourceCreater,
-} from "./propsCreater";
+  IoTdataSourceCreater
+} from './propsCreater';
 // 公共样式
 export const commonStyle = () => ({
   left: leftCreater(),
@@ -47,16 +47,16 @@ export const commonAttr = {
 // 编辑器左侧组件列表
 const list = [
   {
-    component: "text",
-    id: "text",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "文字",
+    component: 'text',
+    id: 'text',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '文字',
     propValue: textareaCreater({
-      value: "双击编辑文字"
+      value: '双击编辑文字'
     }),
-    icon: "document",
+    icon: 'document',
     businessData: {},
     style: {
       width: widthCreater(),
@@ -71,16 +71,16 @@ const list = [
     }
   },
   {
-    component: "button",
-    id: "button",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "按钮",
+    component: 'button',
+    id: 'button',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '按钮',
     propValue: textareaCreater({
-      value: "按钮"
+      value: '按钮'
     }),
-    icon: "menu",
+    icon: 'menu',
     businessData: {},
     events: eventsCreater(),
     style: {
@@ -101,14 +101,14 @@ const list = [
     }
   },
   {
-    component: "rectangle",
-    id: "rectangle",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "矩形",
+    component: 'rectangle',
+    id: 'rectangle',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '矩形',
     propValue: textareaCreater(),
-    icon: "full-screen",
+    icon: 'full-screen',
     businessData: {},
     events: eventsCreater(),
     style: {
@@ -124,20 +124,20 @@ const list = [
       verticalAlign: verticalAlignCreater(),
       letterSpacing: letterSpacingCreater(),
       borderWidth: borderWidthCreater(),
-      borderStyle: borderStyleCreater({value: "solid",}),
+      borderStyle: borderStyleCreater({ value: 'solid' }),
       borderColor: borderColorCreater(),
       borderRadius: borderRadiusCreater(),
       backgroundColor: backgroundColorCreater()
     }
   },
   {
-    component: "picture",
-    id: "picture",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "图片",
-    icon: "picture",
+    component: 'picture',
+    id: 'picture',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '图片',
+    icon: 'picture',
     propValue: textareaCreater({
       value: logo
     }),
@@ -150,13 +150,13 @@ const list = [
     }
   },
   {
-    component: "line",
-    id: "line",
-    type: "svg",
-    tabType:'element',
-    collapseType:'common',
-    label: "直线",
-    icon: "bottom-right",
+    component: 'line',
+    id: 'line',
+    type: 'svg',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '直线',
+    icon: 'bottom-right',
     propValue: textareaCreater(),
     businessData: {},
     style: {
@@ -171,17 +171,17 @@ const list = [
       }),
       targetY: targetYCreater({
         value: 180
-      }),
+      })
     }
   },
   {
-    component: "time",
-    id: "time",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "时间",
-    icon: "timer",
+    component: 'time',
+    id: 'time',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '时间',
+    icon: 'timer',
     propValue: textareaCreater(),
     businessData: {},
     style: {
@@ -201,51 +201,51 @@ const list = [
     }
   },
   {
-    component: "variable",
-    id: "variable",
-    type: "dom",
-    tabType:'element',
-    collapseType:'common',
-    label: "变量值",
-    icon: "switch",
-    propValue: textareaCreater({hidden:true}),
+    component: 'variable',
+    id: 'variable',
+    type: 'dom',
+    tabType: 'element',
+    collapseType: 'common',
+    label: '变量值',
+    icon: 'switch',
+    propValue: textareaCreater({ hidden: true }),
     businessData: {
       dataResourceType: selectCreater({
-        label: "数据源类型",
-        options:[
+        label: '数据源类型',
+        options: [
           { label: 'IoT平台', value: 'IoT平台' },
-          { label: '第三方', value: '第三方' },
+          { label: '第三方', value: '第三方' }
         ]
       }),
       IoTdataSource: IoTdataSourceCreater({
-        label: "数据源-IoT",
+        label: '数据源-IoT'
       }),
       thirdDataSource: IoTdataSourceCreater({
-        type: "thirdDataSource",
-        label: "数据源-第三方",
-        value:{
-          address:'',
-          unit:''
+        type: 'thirdDataSource',
+        label: '数据源-第三方',
+        value: {
+          address: '',
+          unit: ''
         }
       }),
       showRule: IoTdataSourceCreater({
-        label: "展示规则",
-        type: "showRule",
-        options:[
+        label: '展示规则',
+        type: 'showRule',
+        options: [
           { label: '平台规则', value: 'platform' },
-          { label: '自定义规则', value: 'custom' },
+          { label: '自定义规则', value: 'custom' }
         ],
-        platFormRules:[],
-        customRules:[]
+        platFormRules: [],
+        customRules: []
       }),
       dataDetail: IoTdataSourceCreater({
-        type: "dataDetail",
-        label: "数据详情",
-        value:{
-          showDetail:false,
-          showUnit:false,
-        },
-      }),
+        type: 'dataDetail',
+        label: '数据详情',
+        value: {
+          showDetail: false,
+          showUnit: false
+        }
+      })
     },
     style: {
       width: widthCreater({ value: 100 }),
@@ -254,8 +254,8 @@ const list = [
       color: colorCreater(),
       lineHeight: lineHeightCreater(),
       fontWeight: fontWeightCreater(),
-      textAlign: textAlignCreater({value:'center'}),
-      verticalAlign: verticalAlignCreater({ value: "middle" }),
+      textAlign: textAlignCreater({ value: 'center' }),
+      verticalAlign: verticalAlignCreater({ value: 'middle' }),
       letterSpacing: letterSpacingCreater(),
       backgroundColor: backgroundColorCreater(),
       borderWidth: borderWidthCreater(),
@@ -264,13 +264,13 @@ const list = [
     }
   },
   {
-    component: "picture",
-    id:'image',
-    type: "dom",
-    tabType:'image',
-    collapseType:'system',
-    label: "",
-    icon: "",
+    component: 'picture',
+    id: 'image',
+    type: 'dom',
+    tabType: 'image',
+    collapseType: 'system',
+    label: '',
+    icon: '',
     propValue: textareaCreater(),
     businessData: {},
     events: eventsCreater(),
@@ -279,7 +279,7 @@ const list = [
       height: heightCreater({ value: 50 }),
       borderRadius: borderRadiusCreater()
     }
-  },
+  }
 ];
 
 for (let i = 0, len = list.length; i < len; i++) {

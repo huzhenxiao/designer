@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-if="editMode === 'edit'"
-    class="v-text"
-    @keydown="handleKeydown"
-    @keyup="handleKeyup"
-  >
+  <div v-if="editMode === 'edit'" class="v-text" @keydown="handleKeydown" @keyup="handleKeyup">
     <!-- tabindex >= 0 使得双击时聚集该元素 -->
     <div
       :contenteditable="canEdit"
@@ -30,21 +25,21 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue';
 
 export default {
   props: {
     propValue: {
       type: Object,
-      require: true,
+      require: true
     },
     element: {
-      type: Object,
+      type: Object
     },
     editMode: {
       type: String,
-      default:'edit'
-    },
+      default: 'edit'
+    }
   },
   setup(props, context) {
     const canEdit = ref(false);
@@ -66,19 +61,19 @@ export default {
     };
 
     const handleBlur = (e) => {
-      props.element.propValue.value = e.target.innerHTML || "";
+      props.element.propValue.value = e.target.innerHTML || '';
       canEdit.value = false;
     };
 
     const handleInput = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      context.emit("input", props.element, {
-        height:{
-          value: e.target.clientHeight,
+      context.emit('input', props.element, {
+        height: {
+          value: e.target.clientHeight
         },
-        width:{
-          value: e.target.clientWidth,
+        width: {
+          value: e.target.clientWidth
         }
       });
     };
@@ -86,11 +81,11 @@ export default {
     const clearStyle = (e) => {
       e.preventDefault();
       const clp = e.clipboardData;
-      const text = clp.getData("text/plain") || "";
-      if (text !== "") {
-        document.execCommand("insertText", false, text);
+      const text = clp.getData('text/plain') || '';
+      if (text !== '') {
+        document.execCommand('insertText', false, text);
       }
-      context.emit("input", props.element, e.target.innerHTML);
+      context.emit('input', props.element, e.target.innerHTML);
     };
 
     const handleMousedown = (e) => {
@@ -108,9 +103,9 @@ export default {
       handleBlur,
       handleInput,
       clearStyle,
-      handleMousedown,
+      handleMousedown
     };
-  },
+  }
 };
 </script>
 

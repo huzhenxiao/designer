@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import { computed,watch } from "vue";
-import Textarea from "./customComponent/Textarea.vue";
-import Click from "./customComponent/CustomClick/index.vue";
-import { storeToRefs } from "pinia";
-import { useMainStore } from "@/store";
+import { computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import Textarea from './customComponent/Textarea.vue';
+import Click from './customComponent/CustomClick/index.vue';
+import { useMainStore } from '@/store';
 
 export default {
   components: {
@@ -29,9 +29,9 @@ export default {
   setup() {
     const mainStore = useMainStore();
     const { curComponent } = storeToRefs(mainStore);
-    
+
     const dataList = computed(() => {
-      const result = Object.keys(curComponent.value.events).map(key => ({
+      const result = Object.keys(curComponent.value.events).map((key) => ({
         key,
         ...curComponent.value.events[key]
       }));

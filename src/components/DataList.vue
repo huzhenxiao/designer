@@ -3,7 +3,7 @@
     <p class="component-name">{{ curComponent.label }}</p>
     <component
       class="data-list-item"
-      v-for="(item,key) in businessData"
+      v-for="(item, key) in businessData"
       :is="item.type"
       :key="key"
       :label="item.label"
@@ -19,16 +19,16 @@
 </template>
 
 <script>
-import { computed,watch,watchEffect,reactive } from "vue";
-import Select from "./customComponent/Select.vue";
-import Textarea from "./customComponent/Textarea.vue";
-import Click from "./customComponent/CustomClick/index.vue";
-import IoTDataSource from "./customComponent/IoTDataSource/index.vue";
-import ThirdDataSource from "./customComponent/ThirdDataSource/index.vue";
-import ShowRule from "./customComponent/ShowRule/index.vue";
+import { computed, watch, watchEffect, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
+import Select from './customComponent/Select.vue';
+import Textarea from './customComponent/Textarea.vue';
+import Click from './customComponent/CustomClick/index.vue';
+import IoTDataSource from './customComponent/IoTDataSource/index.vue';
+import ThirdDataSource from './customComponent/ThirdDataSource/index.vue';
+import ShowRule from './customComponent/ShowRule/index.vue';
 import DataDetail from './customComponent/DataDetail/index';
-import { storeToRefs } from "pinia";
-import { useMainStore } from "@/store";
+import { useMainStore } from '@/store';
 
 export default {
   components: {
@@ -43,12 +43,12 @@ export default {
   setup() {
     const mainStore = useMainStore();
     const { curComponent } = storeToRefs(mainStore);
-    
-    const businessData = curComponent.value.businessData;
-    console.log('businessData',businessData);
-    
+
+    const { businessData } = curComponent.value;
+    console.log('businessData', businessData);
+
     const handleValueChange = (key, value) => {
-      console.log('==========businessDataChange============',key, value);
+      console.log('==========businessDataChange============', key, value);
       mainStore.setCurComponentBusinessData({ key, value });
     };
     return {
@@ -64,7 +64,7 @@ export default {
 .data-list {
   width: 100%;
   height: 100%;
-  .data-list-item{
+  .data-list-item {
     margin-bottom: 10px;
   }
 
