@@ -97,7 +97,7 @@ export default {
           shapeDom = shapeDom.parentElement;
         }
         const rotate = pos.rotate.value;
-        shapeDom.style.transform = `translateX(${disX}px) translateY(${disY}px) rotate(${rotate}deg)`;
+        shapeDom.style.transform = `translate3d(${disX}px,${disY}px,0) rotate(${rotate}deg)`;
       };
       const throttleMove = throttle(move, throttleDelay.value);
       const up = (e) => {
